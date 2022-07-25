@@ -641,15 +641,10 @@ EXEC dbo.sp_executesql @statement = N'
 CREATE OR ALTER PROCEDURE [WJbItems_Ins]
 	@Data nvarchar(max)
 AS
-IF NOT EXISTS (SELECT 1 FROM WJbItems I
-	INNER JOIN (SELECT * FROM OPENJSON(@Data) 
-		WITH (FileId uniqueidentifier, ItemNo int)) D ON I.FileId = D.FileId AND I.ItemNo = D.ItemNo)
-BEGIN
-    INSERT INTO WJbItems (FileId, ItemNo, ItemMore) 
-	SELECT FileId, ItemNo, JSON_QUERY(@Data, ''$.ItemMore'') ItemMore
-	FROM OPENJSON(@Data) 
-		WITH (FileId uniqueidentifier, ItemNo int)
-END
+INSERT INTO WJbItems (FileId, ItemNo, ItemMore) 
+SELECT FileId, ItemNo, JSON_QUERY(@Data, ''$.ItemMore'') ItemMore
+FROM OPENJSON(@Data) 
+	WITH (FileId uniqueidentifier, ItemNo int)
 ';
 EXEC dbo.sp_executesql @statement = N'
 CREATE OR ALTER PROCEDURE [WJbItems_Set_Result]

@@ -48,7 +48,17 @@ public static class WJbFileHelper
     {
         if (file?.FileContent == null || file.FileContent.Length == 0) return await Task.FromResult(null as string);
 
-        await file.CompressAsync(cancellationToken);
+        switch (Path.GetExtension(file.FileName ?? "file.txt").ToLower())
+        {
+            case ".bmp":
+            case ".csv":
+            case ".htm":
+            case ".html":
+            case ".txt":
+            case ".xml":
+                await file.CompressAsync(cancellationToken);
+                break;
+        }
 
         return await DbHelper.FromProcAsync<string>("WJbFiles_Ins", file, cancellationToken: cancellationToken);
     }

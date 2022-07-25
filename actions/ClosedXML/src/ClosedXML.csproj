@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageIcon>ukrguru-logo.jpg</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <AssemblyName>UkrGuru.WebJobs.Actions.ClosedXML</AssemblyName>
+    <RootNamespace>UkrGuru.WebJobs.Actions.ClosedXML</RootNamespace>
+    <Version>3.6.6.1</Version>
+    <Description>UkrGuru.WebJobs.Actions.ClosedXML package is additional actions for UkrGuru.WebJobs. 
+Built on the ClosedXML package for processing files in Excel format.</Description>
+    <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl>https://github.com/UkrGuru/WebJobs/tree/main/actions/ClosedXML</RepositoryUrl>
+    <PackageTags>excel xlsx webjobs actions</PackageTags>
+    <PackageReleaseNotes>Added ClosedXML.ImportFile Action for import Excel file into WJbItems table.</PackageReleaseNotes>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\ukrguru-logo.jpg">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\3.6.6.1.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.96.0" />
+    <PackageReference Include="UkrGuru.WebJobs" Version="3.6.6" />
+  </ItemGroup>
+
+</Project>
