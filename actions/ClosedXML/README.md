@@ -1,7 +1,7 @@
-# UkrGuru.WebJobs.Actions.CsvHelper
+# UkrGuru.WebJobs.Actions.ClosedXML
 
-UkrGuru.WebJobs.Actions.CsvHelper package is additional actions for UkrGuru.WebJobs. 
-Built on the CsvHelper package for processing files in CSV format.
+UkrGuru.WebJobs.Actions.ClosedXML package is additional actions for UkrGuru.WebJobs. 
+Built on the ClosedXML package for processing files in Excel format.
 
-CsvHelper Actions:
-- ImportFile - import CSV file into WJbItems table.
+ClosedXML Actions:
+- ImportFile - import Excel Sheet into WJbItems table.
