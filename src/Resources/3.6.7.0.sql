@@ -656,6 +656,16 @@ FROM WJbItems AS I
 INNER JOIN (SELECT * FROM OPENJSON(@Data) 
 	WITH (FileId uniqueidentifier, ItemNo int, Result int)) D ON I.FileId = D.FileId AND I.ItemNo = D.ItemNo
 ';
+EXEC dbo.sp_executesql @statement = N'
+CREATE OR ALTER FUNCTION [WJbItems_Get_Json_File](@FileId uniqueidentifier)
+RETURNS nvarchar(max)
+AS
+BEGIN
+	RETURN (SELECT CONCAT(''['', (SELECT STRING_AGG(ItemMore, '','')
+		FROM WJbItems
+		WHERE FileId = @FileId), '']''))
+END
+';
 END
 
 BEGIN /*** WJbLogs Procs ***/

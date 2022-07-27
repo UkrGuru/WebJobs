@@ -14,9 +14,9 @@
     <Description>The UkrGuru.WebJobs package is the Scheduler and N-Workers for ANY of your background jobs in .NET 6. applications. 
 Supports CRON expressions in Rules. Provides extensibility for any custom aActions, polymorphism for Action/Rule/Job parameters 
 and transferring the result of the Job to the next Job, based on the results of the current Job. Uses UkrGuru.SqlJson to connect to the database.</Description>
-    <Version>3.6.6</Version>
+    <Version>3.6.7</Version>
     <SignAssembly>False</SignAssembly>
-    <AssemblyOriginatorKeyFile>UkrGuru.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>C:\Users\ALEX\source\repos\!UkrGuru\!!!\UkrGuru.pfx</AssemblyOriginatorKeyFile>
     <PackageTags>dotnet net6 sqlserver webjobs scheduler worker sql-server email template ssrs</PackageTags>
     <PackageReleaseNotes>Added WJbItems for import and processing file</PackageReleaseNotes>
     <AssemblyName>UkrGuru.WebJobs</AssemblyName>
@@ -24,6 +24,7 @@ and transferring the result of the Job to the next Job, based on the results of 
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <DebugType>none</DebugType>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <DelaySign>False</DelaySign>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -44,7 +45,7 @@ and transferring the result of the Job to the next Job, based on the results of 
 
   <ItemGroup>
     <None Remove="Resources\2.1.0.sql" />
-    <None Remove="Resources\3.6.6.0.sql" />
+    <None Remove="Resources\3.6.7.0.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -62,7 +63,7 @@ and transferring the result of the Job to the next Job, based on the results of 
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\3.6.6.0.sql" />
+    <EmbeddedResource Include="Resources\3.6.7.0.sql" />
     <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>

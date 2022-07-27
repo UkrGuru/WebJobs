@@ -23,23 +23,6 @@ public class SsrsExportReportAction : BaseAction
         public string? Password { get; set; }
     }
 
-    private static string GetReportFormat(string? filename)
-    {
-        return (Path.GetExtension(filename)?.ToLower()) switch
-        {
-            ".docx" => "WORDOPENXML",
-            ".xlsx" => "EXCELOPENXML",
-            ".pptx" => "PPTX",
-            ".pdf" => "PDF",
-            ".tif" or ".tiff" => "IMAGE",
-            ".mhtml" => "MHTML",
-            ".csv" => "CSV",
-            ".xml" => "XML",
-            ".atom" => "ATOM",
-            _ => throw new ArgumentOutOfRangeException()
-        };
-    }
-
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var ssrs_settings_name = More.GetValue("ssrs_settings_name").ThrowIfBlank("ssrs_settings_name");
@@ -104,5 +87,22 @@ public class SsrsExportReportAction : BaseAction
         await LogHelper.LogInformationAsync(nameof(DownloadPageAction), new { jobId = JobId, result = "OK", guid }, cancellationToken);
 
         return true;
+    }
+
+    public static string GetReportFormat(string? filename)
+    {
+        return (Path.GetExtension(filename)?.ToLower()) switch
+        {
+            ".docx" => "WORDOPENXML",
+            ".xlsx" => "EXCELOPENXML",
+            ".pptx" => "PPTX",
+            ".pdf" => "PDF",
+            ".tif" or ".tiff" => "IMAGE",
+            ".mhtml" => "MHTML",
+            ".csv" => "CSV",
+            ".xml" => "XML",
+            ".atom" => "ATOM",
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 }

@@ -33,8 +33,6 @@ public class SendEmailAction : BaseAction
         public string? Password { get; set; }
     }
 
-    public static bool IsHtmlBody(string? body) => body != null && Regex.IsMatch(body, @"<\s*([^ >]+)[^>]*>.*?<\s*/\s*\1\s*>");  // or @"<[^>]+>"
-
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var smtp_settings_name = More.GetValue("smtp_settings_name").ThrowIfBlank("smtp_settings_name");
@@ -107,4 +105,6 @@ public class SendEmailAction : BaseAction
 
         return true;
     }
+
+    public static bool IsHtmlBody(string? body) => body != null && Regex.IsMatch(body, @"<\s*([^ >]+)[^>]*>.*?<\s*/\s*\1\s*>");  // or @"<[^>]+>"
 }
