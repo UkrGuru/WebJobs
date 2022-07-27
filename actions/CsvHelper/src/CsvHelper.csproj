@@ -10,8 +10,8 @@
     <AssemblyName>UkrGuru.WebJobs.Actions.CsvHelper</AssemblyName>
     <RootNamespace>UkrGuru.WebJobs.Actions.CsvHelper</RootNamespace>
     <Version>3.6.6</Version>
-    <Description>UkrGuru.WebJobs.Actions.CsvHelper package is additional actions for UkrGuru.WebJobs. 
-Built on the CsvHelper package for processing files in CSV format.</Description>
+    <Description>UkrGuru.WebJobs.Actions.CsvHelper is additional actions for UkrGuru.WebJobs package. 
+Created on base CsvHelper package for processing files in CSV format.</Description>
     <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/UkrGuru/WebJobs/tree/main/actions/CsvHelper</RepositoryUrl>

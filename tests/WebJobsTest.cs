@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Text.Json;
+using WebJobsTests.Extensions;
 
 namespace System.Reflection.Tests;
 
@@ -221,5 +222,25 @@ public class WebJobsTest
 
             Assert.Null(content1);
         }
+    }
+
+    [Fact]
+    public async Task ParseTextActionTest()
+    {
+        Job job = new() { ActionType = "ParseTextAction, UkrGuru.WebJobs" };
+        job.JobMore = JsonSerializer.Serialize(new { text = ParseTextExtensionsTests.Text, goals = JsonSerializer.Serialize(ParseTextExtensionsTests.Goals)});
+    
+        var result = null as string;
+
+        var action = job.CreateAction();
+
+        if (action != null)
+        {
+            await action.ExecuteAsync();
+
+            result = ((More)action.More).GetValue("result");
+        }
+
+        Assert.Equal(@"{""OrderId"":""123"",""From"":""01/07/2022"",""Customer"":""Company #1"",""Salesperson"":""Maria"",""Order Details"":""Product|Qty|Unit Price|Discount|Total Price|Status\r\nPears|30|30.00|10.00%|810.00|Invoiced\r\nApples|30|53.00|10.00%|1431.00|Invoiced"",""Grand Total"":""2241.00"",""Payment Type"":""Check"",""Payment Date"":""01/07/2022"",""Payment Notes"":""""}", result);
     }
 }

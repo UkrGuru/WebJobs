@@ -1,17 +1,12 @@
 ﻿using Xunit;
 using UkrGuru.WebJobs.Data;
-using static UkrGuru.WebJobs.Actions.ParseTextAction;
 using System.Linq;
 
 namespace WebJobsTests.Extensions;
 
 public class ParseTextExtensionsTests
 {
-    private readonly ParsingGoal[] goals;
-
-    public ParseTextExtensionsTests()
-    {
-        var text = @"Order #123 from 01/07/2022
+    public static string Text = @"Order #123 from 01/07/2022
 
 Customer: Company #1
 Salesperson: Maria
@@ -29,20 +24,17 @@ Payment Date: 01/07/2022
 Payment/Order Notes:
 ";
 
-        goals = new ParsingGoal[] { new ParsingGoal("OrderId", "", "Order #", "from"),
-            new ParsingGoal("From", "", "from", "\n"),
-            new ParsingGoal("Customer", "", "Customer:", "\n"),
-            new ParsingGoal("Salesperson", "", "Salesperson:", "\n"),
-            new ParsingGoal("Order Details", "", "Order Details", "Grand Total"),
-            new ParsingGoal("Grand Total", "", "Grand Total:", "\n"),
-            new ParsingGoal("Payment Information", "", "Payment Information"),
-            new ParsingGoal("Payment Type", "Payment Information", "Payment Type:", "\n"),
-            new ParsingGoal("Payment Date", "Payment Information", "Payment Date:", "\n"),
-            new ParsingGoal("Payment Notes", "Payment Information", "Payment/Order Notes:", ""),
-        };
-
-        ParsingGoalExtensions.AppendRootNode(ref goals, text);
-    }
+    public static ParsingGoal[] Goals = new ParsingGoal[] { new ParsingGoal() { Name = "OrderId", Start = "Order #", End = "from" },
+        new ParsingGoal(){ Name = "From", Start = "from", End = "\n" },
+        new ParsingGoal(){ Name = "Customer", Start = "Customer:",  End = "\n" },
+        new ParsingGoal(){ Name = "Salesperson", Start = "Salesperson:",  End = "\n" },
+        new ParsingGoal(){ Name = "Order Details", Start = "Order Details",  End = "Grand Total" },
+        new ParsingGoal(){ Name = "Grand Total", Start = "Grand Total:",  End = "\n" },
+        new ParsingGoal(){ Name = "Payment Information", Start = "Payment Information" },
+        new ParsingGoal(){ Name = "Payment Type", Parent = "Payment Information", Start = "Payment Type:",  End = "\n" },
+        new ParsingGoal(){ Name = "Payment Date", Parent = "Payment Information", Start = "Payment Date:",  End = "\n" },
+        new ParsingGoal(){ Name = "Payment Notes", Parent = "Payment Information", Start = "Payment/Order Notes:",  End = "" },
+    };
 
     [Theory]
     [InlineData("OrderId", "", "123")]
@@ -55,8 +47,111 @@ Payment/Order Notes:
     [InlineData("Payment Notes", "Payment Information", "")]
     public void GoalsParseValueTest(string name, string? parent, string? expected = default)
     {
+        var goals = Goals.AppendRootNode(Text);
+
         var goal = goals.FirstOrDefault(e => e.Name.Equals(name) && e.Parent == parent);
 
         Assert.Equal(expected, goals.ParseValue(goal));
+    }
+
+    [Theory]
+    [InlineData("OrderId", true)]
+    [InlineData("From", true)]
+    [InlineData("Customer", true)]
+    [InlineData("Payment Type", true)]
+    [InlineData("Payment Notes", true)]
+    [InlineData("Payment Information", false)]
+    [InlineData("", false)]
+    public void GoalsIsLeafTest(string name, bool expected = default)
+    {
+        var goals = Goals.AppendRootNode(Text);
+
+        Assert.Equal(expected, goals.IsLeaf(name));
+    }
+
+    [Theory]
+    [InlineData(null, null, null, null)]
+    [InlineData(null, null, "", null)]
+    [InlineData(null, null, "0", null)]
+
+    [InlineData(null, "", null, null)]
+    [InlineData(null, "", "", null)]
+    [InlineData(null, "", "0", null)]
+
+    [InlineData(null, "0", null, null)]
+    [InlineData(null, "0", "", null)]
+    [InlineData(null, "0", "0", null)]
+
+    [InlineData("", null, null, "")]
+    [InlineData("", null, "", "")]
+    [InlineData("", null, "0", null)]
+
+    [InlineData("", "", null, "")]
+    [InlineData("", "", "", "")]
+    [InlineData("", "", "0", null)]
+
+    [InlineData("", "0", null, null)]
+    [InlineData("", "0", "", null)]
+    [InlineData("", "0", "0", null)]
+
+    [InlineData("0", null, null, "0")]
+    [InlineData("0", null, "", "0")]
+    [InlineData("0", null, "0", "")]
+
+    [InlineData("0", "", null, "0")]
+    [InlineData("0", "", "", "0")]
+    [InlineData("0", "", "0", "")]
+
+    [InlineData("0", "0", null, "")]
+    [InlineData("0", "0", "", "")]
+    [InlineData("0", "0", "0", null)]
+
+    [InlineData("01", null, null, "01")]
+    [InlineData("01", null, "", "01")]
+    [InlineData("01", null, "0", "")]
+    [InlineData("01", null, "1", "0")]
+
+    [InlineData("01", "", null, "01")]
+    [InlineData("01", "", "", "01")]
+    [InlineData("01", "", "0", "")]
+    [InlineData("01", "", "1", "0")]
+
+    [InlineData("01", "0", null, "1")]
+    [InlineData("01", "0", "", "1")]
+    [InlineData("01", "0", "0", null)]
+    [InlineData("01", "0", "1", "")]
+
+    [InlineData("012", null, null, "012")]
+    [InlineData("012", null, "", "012")]
+    [InlineData("012", null, "0", "")]
+    [InlineData("012", null, "1", "0")]
+    [InlineData("012", null, "2", "01")]
+    [InlineData("012", null, "3", null)]
+
+    [InlineData("012", "", null, "012")]
+    [InlineData("012", "", "", "012")]
+    [InlineData("012", "", "0", "")]
+    [InlineData("012", "", "1", "0")]
+    [InlineData("012", "", "2", "01")]
+    [InlineData("012", "", "3", null)]
+
+    [InlineData("012", "0", null, "12")]
+    [InlineData("012", "0", "", "12")]
+    [InlineData("012", "0", "0", null)]
+    [InlineData("012", "0", "1", "")]
+    [InlineData("012", "0", "2", "1")]
+    [InlineData("012", "0", "3", null)]
+
+    [InlineData("012", "1", null, "2")]
+    [InlineData("012", "1", "", "2")]
+    [InlineData("012", "1", "0", null)]
+    [InlineData("012", "1", "1", null)]
+    [InlineData("012", "1", "2", "")]
+    [InlineData("012", "2", "1", null)]
+    [InlineData("012", "1", "3", null)]
+
+    public void CropTest(string? text, string? start, string? end = default, string? expected = default)
+    {
+        Assert.Equal(expected, ParsingGoalExtensions.Crop(text, start, end));
     }
 }

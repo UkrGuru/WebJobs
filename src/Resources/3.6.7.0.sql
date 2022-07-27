@@ -85,6 +85,14 @@ IF NOT EXISTS (SELECT 1 FROM [WJbActions] WHERE (ActionId = 6))
 	"timeout": null
 }', 0)
 
+IF NOT EXISTS (SELECT 1 FROM [WJbActions] WHERE (ActionId = 7))
+	INSERT [WJbActions] ([ActionId], [ActionName], [ActionType], [ActionMore], [Disabled]) 
+	VALUES (7, N'ParseText', N'ParseTextAction, UkrGuru.WebJobs', N'{
+	"text": "",
+	"goals": [],
+	"result_name": "result"
+}', 0)
+
 IF NOT EXISTS (SELECT 1 FROM [WJbActions] WHERE (ActionId = 10))
 	INSERT [WJbActions] ([ActionId], [ActionName], [ActionType], [ActionMore], [Disabled]) 
 	VALUES (10, N'SSRS.ExportReport', N'SsrsExportReportAction, UkrGuru.WebJobs', N'{
@@ -165,6 +173,10 @@ IF NOT EXISTS (SELECT 1 FROM [WJbRules] WHERE (RuleId = 5))
 IF NOT EXISTS (SELECT 1 FROM [WJbRules] WHERE (RuleId = 6))
 	INSERT [WJbRules] ([RuleId], [RuleName], [RulePriority], [ActionId], [RuleMore], [Disabled]) 
 	VALUES (6, N'ProcItems Base', 2, 6, NULL, 0)
+
+IF NOT EXISTS (SELECT 1 FROM [WJbRules] WHERE (RuleId = 7))
+	INSERT [WJbRules] ([RuleId], [RuleName], [RulePriority], [ActionId], [RuleMore], [Disabled]) 
+	VALUES (7, N'ParseText Base', 2, 7, NULL, 0)
 
 IF NOT EXISTS (SELECT * FROM [dbo].[WJbRules] WHERE [RuleId] = 10)
 	INSERT [dbo].[WJbRules] ([RuleId], [RuleName], [RulePriority], [ActionId], [RuleMore], [Disabled]) 

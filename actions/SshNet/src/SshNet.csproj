@@ -7,8 +7,8 @@
     <RootNamespace>UkrGuru.WebJobs.Actions.SshNet</RootNamespace>
     <Version>3.6.6</Version>
     <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
-    <RepositoryUrl>https://github.com/UkrGuru/WebJobs/tree/main/actions</RepositoryUrl>
-    <PackageTags>ssh scp sftp</PackageTags>
+    <RepositoryUrl>https://github.com/UkrGuru/WebJobs/tree/main/actions/SshNet</RepositoryUrl>
+    <PackageTags>ssh.net ssh sftp</PackageTags>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>ukrguru-logo.jpg</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>

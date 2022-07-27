@@ -8,7 +8,7 @@
     <Version>3.6.6</Version>
     <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
     <RepositoryUrl>https://github.com/UkrGuru/WebJobs/tree/main/actions/MailKit</RepositoryUrl>
-    <PackageTags>mailkit pop3 mail email net6.0</PackageTags>
+    <PackageTags>mailkit pop3 mail email mbox net6.0</PackageTags>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>ukrguru-logo.jpg</PackageIcon>
@@ -16,8 +16,8 @@
     <PackageProjectUrl></PackageProjectUrl>
     <PackageReleaseNotes>Added ReceiveEmailsAction - receive emails from the mailbox in WJbFiles and WJbQueue for further processing.
 </PackageReleaseNotes>
-    <Description>UkrGuru.WebJobs.Actions.MailKit package is additional actions for UkrGuru.WebJobs. 
-Built on the basis MailKit package for receive emails from the mailbox.</Description>
+    <Description>UkrGuru.WebJobs.Actions.MailKit is additional actions for UkrGuru.WebJobs package. 
+Created on base MailKit package for receive emails from the mailbox.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
