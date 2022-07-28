@@ -2,9 +2,11 @@
 [![Nuget](https://img.shields.io/nuget/v/UkrGuru.WebJobs)](https://www.nuget.org/packages/UkrGuru.WebJobs/)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-yellow.svg)](https://www.paypal.com/donate/?hosted_button_id=BPUF3H86X96YN)
 
-The UkrGuru.WebJobs package is the Scheduler and N-Workers for ANY of your background jobs in .NET 6. applications. 
-Supports CRON expressions in Rules. Provides extensibility for any custom aActions, polymorphism for Action/Rule/Job parameters 
-and transferring the result of the Job to the next Job, based on the results of the current Job. Uses UkrGuru.SqlJson to connect to the database.
+The UkrGuru.WebJobs package is the Scheduler and N-Workers for ANY type of your background jobs in .NET 6 applications. 
+Supports CRON expressions in Rules. Provides extensibility for any custom Actions, polymorphism for Action/Rule/Job parameters 
+and transferring the result of the Job to the next Job, based on the results of the current Job. 
+Uses UkrGuru.SqlJson to quickly run stored procedures on sql server.
+
 Standard Actions:
 - DownloadPage - download the page and save the result to WJbFiles table for further processing.
 - FillTemplate - fill the template with your variable values and stored result in a variable for further processing.
