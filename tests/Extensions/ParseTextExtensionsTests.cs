@@ -24,17 +24,20 @@ Payment Date: 01/07/2022
 Payment/Order Notes:
 ";
 
-    public static ParsingGoal[] Goals = new ParsingGoal[] { new ParsingGoal() { Name = "OrderId", Start = "Order #", End = "from" },
-        new ParsingGoal(){ Name = "From", Start = "from", End = "\n" },
-        new ParsingGoal(){ Name = "Customer", Start = "Customer:",  End = "\n" },
-        new ParsingGoal(){ Name = "Salesperson", Start = "Salesperson:",  End = "\n" },
+    public static ParsingGoal[] Goals = new ParsingGoal[] {
+        new ParsingGoal(){ Name = "OrderId", Start = "Order #", End = "from" },
+        new ParsingGoal(){ Name = "From", Start = "from", End = "\r\n" },
+        new ParsingGoal(){ Name = "Customer", Start = "Customer:",  End = "\r\n" },
+        new ParsingGoal(){ Name = "Salesperson", Start = "Salesperson:",  End = "\r\n" },
         new ParsingGoal(){ Name = "Order Details", Start = "Order Details",  End = "Grand Total" },
-        new ParsingGoal(){ Name = "Grand Total", Start = "Grand Total:",  End = "\n" },
+        new ParsingGoal(){ Name = "Grand Total", Start = "Grand Total:",  End = "\r\n" },
         new ParsingGoal(){ Name = "Payment Information", Start = "Payment Information" },
-        new ParsingGoal(){ Name = "Payment Type", Parent = "Payment Information", Start = "Payment Type:",  End = "\n" },
-        new ParsingGoal(){ Name = "Payment Date", Parent = "Payment Information", Start = "Payment Date:",  End = "\n" },
+        new ParsingGoal(){ Name = "Payment Type", Parent = "Payment Information", Start = "Payment Type:",  End = "\r\n" },
+        new ParsingGoal(){ Name = "Payment Date", Parent = "Payment Information", Start = "Payment Date:",  End = "\r\n" },
         new ParsingGoal(){ Name = "Payment Notes", Parent = "Payment Information", Start = "Payment/Order Notes:",  End = "" },
     };
+
+    public static string Result = @"{""OrderId"":""123"",""From"":""01/07/2022"",""Customer"":""Company #1"",""Salesperson"":""Maria"",""Order Details"":""Product|Qty|Unit Price|Discount|Total Price|Status\r\nPears|30|30.00|10.00%|810.00|Invoiced\r\nApples|30|53.00|10.00%|1431.00|Invoiced"",""Grand Total"":""2241.00"",""Payment Type"":""Check"",""Payment Date"":""01/07/2022"",""Payment Notes"":""""}";
 
     [Theory]
     [InlineData("OrderId", "", "123")]

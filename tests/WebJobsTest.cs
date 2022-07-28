@@ -241,6 +241,6 @@ public class WebJobsTest
             result = ((More)action.More).GetValue("result");
         }
 
-        Assert.Equal(@"{""OrderId"":""123"",""From"":""01/07/2022"",""Customer"":""Company #1"",""Salesperson"":""Maria"",""Order Details"":""Product|Qty|Unit Price|Discount|Total Price|Status\r\nPears|30|30.00|10.00%|810.00|Invoiced\r\nApples|30|53.00|10.00%|1431.00|Invoiced"",""Grand Total"":""2241.00"",""Payment Type"":""Check"",""Payment Date"":""01/07/2022"",""Payment Notes"":""""}", result);
+        Assert.Equal(ParseTextExtensionsTests.Result, result);
     }
 }

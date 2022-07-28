@@ -9,7 +9,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <AssemblyName>UkrGuru.WebJobs.Actions.ClosedXML</AssemblyName>
     <RootNamespace>UkrGuru.WebJobs.Actions.ClosedXML</RootNamespace>
-    <Version>3.6.6.1</Version>
+    <Version>3.6.7</Version>
     <Description>UkrGuru.WebJobs.Actions.ClosedXML is additional actions for UkrGuru.WebJobs package. 
 Created on base ClosedXML package for processing files in Excel format.</Description>
     <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
@@ -33,12 +33,12 @@ Created on base ClosedXML package for processing files in Excel format.</Descrip
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\3.6.6.1.sql" />
+    <EmbeddedResource Include="Resources\3.6.7.0.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.96.0" />
-    <PackageReference Include="UkrGuru.WebJobs" Version="3.6.6" />
+    <PackageReference Include="UkrGuru.WebJobs" Version="3.6.7" />
   </ItemGroup>
 
 </Project>

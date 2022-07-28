@@ -89,7 +89,7 @@ IF NOT EXISTS (SELECT 1 FROM [WJbActions] WHERE (ActionId = 7))
 	INSERT [WJbActions] ([ActionId], [ActionName], [ActionType], [ActionMore], [Disabled]) 
 	VALUES (7, N'ParseText', N'ParseTextAction, UkrGuru.WebJobs', N'{
 	"text": "",
-	"goals": [],
+	"goals": "[]",
 	"result_name": "result"
 }', 0)
 
