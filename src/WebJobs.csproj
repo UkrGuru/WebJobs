@@ -5,20 +5,21 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Authors>Oleksandr Viktor (UkrGuru)</Authors>
-    <Company>Oleksandr Viktor (UkrGuru)</Company>
+    <Company>PE VIKTOR Oleksandr Oleksandrovych</Company>
     <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>ukrguru-logo.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/UkrGuru/WebJobs</RepositoryUrl>
-    <Description>The UkrGuru.WebJobs package is the Scheduler and N-Workers for ANY of your background jobs in .NET 6. applications. 
-Supports CRON expressions in Rules. Provides extensibility for any custom aActions, polymorphism for Action/Rule/Job parameters 
-and transferring the result of the Job to the next Job, based on the results of the current Job. Uses UkrGuru.SqlJson to connect to the database.</Description>
-    <Version>3.6.7</Version>
+    <Description>The UkrGuru.WebJobs package is a Scheduler and N-Workers for any base( or custom) Actions in .NET apps. 
+Supports CRON expressions in Rules. Supports polymorphism for Action/Rule/Job parameters and
+transferring the result of the Job to the next Job, based on the results of the current Job. 
+Uses UkrGuru.SqlJson to quickly run stored procedures on sql server.</Description>
+    <Version>3.7.0</Version>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>C:\Users\ALEX\source\repos\!UkrGuru\!!!\UkrGuru.pfx</AssemblyOriginatorKeyFile>
-    <PackageTags>dotnet net6 sqlserver webjobs scheduler worker sql-server email template ssrs</PackageTags>
-    <PackageReleaseNotes>Added WJbItems for import and processing file</PackageReleaseNotes>
+    <PackageTags>scheduler worker sftp pop3 email template ssrs csv excel xlsx .net net6 sqlserver webjobs</PackageTags>
+    <PackageReleaseNotes>Upgraded to last ver base framework.</PackageReleaseNotes>
     <AssemblyName>UkrGuru.WebJobs</AssemblyName>
     <RootNamespace>UkrGuru.WebJobs</RootNamespace>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -28,30 +29,24 @@ and transferring the result of the Job to the next Job, based on the results of 
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DebugType>portable</DebugType>
+    <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>portable</DebugType>
+    <DebugType>none</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Actions\CsvToJsonAction.cs" />
-    <Compile Remove="Actions\RunApiHoleAction.cs" />
-    <Compile Remove="Actions\SftpGetFilesAction.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Resources\2.1.0.sql" />
-    <None Remove="Resources\3.6.7.0.sql" />
+    <None Remove="Resources\3.7.0.0.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
-    <PackageReference Include="UkrGuru.SqlJson" Version="4.3.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+    <PackageReference Include="UkrGuru.SqlJson" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,15 +58,15 @@ and transferring the result of the Job to the next Job, based on the results of 
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\3.6.7.0.sql" />
-    <None Include="..\README.md">
+    <EmbeddedResource Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
-    </None>
+    </EmbeddedResource>
     <EmbeddedResource Include="..\ukrguru-logo.jpg">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\3.7.0.0.sql" />
   </ItemGroup>
 
 </Project>

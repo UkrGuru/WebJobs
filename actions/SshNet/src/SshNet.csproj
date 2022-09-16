@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>UkrGuru.WebJobs.Actions.SshNet</AssemblyName>
     <RootNamespace>UkrGuru.WebJobs.Actions.SshNet</RootNamespace>
-    <Version>3.6.7</Version>
+    <Version>3.7.0</Version>
     <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
     <RepositoryUrl>https://github.com/UkrGuru/WebJobs/tree/main/actions/SshNet</RepositoryUrl>
     <PackageTags>ssh.net ssh sftp</PackageTags>
@@ -27,11 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Resources\3.6.7.0.sql" />
+    <None Remove="Resources\3.7.0.0.sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\3.6.7.0.sql" />
+    <EmbeddedResource Include="Resources\3.7.0.0.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,7 +52,7 @@
 
   <ItemGroup>
     <PackageReference Include="SSH.NET" Version="2020.0.2" />
-    <PackageReference Include="UkrGuru.WebJobs" Version="3.6.7" />
+    <PackageReference Include="UkrGuru.WebJobs" Version="3.7.0" />
   </ItemGroup>
 
 </Project>

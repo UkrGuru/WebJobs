@@ -4,6 +4,7 @@ using Data = UkrGuru.WebJobs.Data;
 using UkrGuru.WebJobs.Data;
 using Xunit;
 using System.Text;
+using System.Net;
 
 namespace MailKitTests
 {
@@ -63,16 +64,6 @@ namespace MailKitTests
             TestJob(jobId);
 
             TestRule(30);
-
-            //Assert.False(File.Exists(filename));
-
-            //TestRule(100);
-
-            //Assert.True(File.Exists(filename));
-
-            //var text = File.ReadAllText(filename);
-
-            //Assert.Equal(text, new String('1', 4096));
 
             Assert.True(true);
         }

@@ -2,9 +2,9 @@
 [![Nuget](https://img.shields.io/nuget/v/UkrGuru.WebJobs)](https://www.nuget.org/packages/UkrGuru.WebJobs/)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-yellow.svg)](https://www.paypal.com/donate/?hosted_button_id=BPUF3H86X96YN)
 
-The UkrGuru.WebJobs package is the Scheduler and N-Workers for ANY type of your background jobs in .NET 6 applications. 
-Supports CRON expressions in Rules. Provides extensibility for any custom Actions, polymorphism for Action/Rule/Job parameters 
-and transferring the result of the Job to the next Job, based on the results of the current Job. 
+The UkrGuru.WebJobs package is a Scheduler and N-Workers for any base( or custom) Actions in .NET apps. 
+Supports CRON expressions in Rules. Supports polymorphism for Action/Rule/Job parameters and 
+transferring the result of the Job to the next Job, based on the results of the current Job. 
 Uses UkrGuru.SqlJson to quickly run stored procedures on sql server.
 
 Standard Actions:
@@ -17,15 +17,15 @@ Standard Actions:
 - SendEmail - send email via your smtp settings.
 - SSRS.ExportReport - export the SSRS report in any valid format to the WJbFiles table.
 
-SshNet Actions:
-- GetFiles - download files from remote directory to WJbFiles table.
-- PutFiles - upload files from WJbFiles to remote directory.
-
-MailKit Actions:
-- ReceiveEmails - receive emails from the mailbox in WJbFiles, then creates a WJbQueue record with the result for further processing.
+ClosedXML Actions:
+- ImportFile - import Excel Sheet into WJbItems table.
 
 CsvHelper Actions:
 - ImportFile - import CSV file into WJbItems table.
 
-ClosedXML Actions:
-- ImportFile - import Excel Sheet into WJbItems table.
+MailKit Actions:
+- ReceiveEmails - receive emails from the mailbox in WJbFiles, then creates a WJbQueue record with the result for further processing.
+
+SshNet Actions:
+- GetFiles - download files from remote directory to WJbFiles table with SFtpClient.
+- PutFiles - upload files from WJbFiles to SFTP remote directory with SFtpClient.

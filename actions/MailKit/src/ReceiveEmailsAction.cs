@@ -5,6 +5,7 @@ using MailKit.Net.Pop3;
 using MimeKit;
 using System.Text;
 using System.Text.Json.Serialization;
+using UkrGuru.Extensions;
 using UkrGuru.SqlJson;
 using UkrGuru.WebJobs.Data;
 
@@ -48,6 +49,7 @@ public class ReceiveEmailsAction : BaseAction
         using (var client = new Pop3Client())
         {
             await client.ConnectAsync(pop3_settings.Host, pop3_settings.Port, pop3_settings.UseSsl, cancellationToken: cancellationToken);
+
             await client.AuthenticateAsync(pop3_settings.UserName, pop3_settings.Password, cancellationToken: cancellationToken);
 
             for (int i = 0; i < client.Count; i++)

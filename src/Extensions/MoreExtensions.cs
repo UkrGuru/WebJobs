@@ -27,16 +27,20 @@ public static class MoreExtensions
 
     public static double? GetValue(this More more, string name, double? defaultValue) => double.TryParse(more.GetValue(name), out double value) ? value : defaultValue;
 
+    public static DateTime? GetValue(this More more, string name, DateTime? defaultValue) => DateTime.TryParse(more.GetValue(name), out DateTime value) ? value : defaultValue;
+
     public static object[]? GetValue(this More more, string name, object[]? defaultValue)
     {
-        try { 
+        try
+        {
             var value = more.GetValue(name);
             ArgumentNullException.ThrowIfNull(value);
 
             return JsonSerializer.Deserialize<object[]?>(value);
         }
-        catch { 
-            return defaultValue; 
+        catch
+        {
+            return defaultValue;
         }
     }
 }

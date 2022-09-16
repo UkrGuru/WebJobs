@@ -4,6 +4,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
+using UkrGuru.Extensions;
 using UkrGuru.SqlJson;
 using UkrGuru.WebJobs;
 using UkrGuru.WebJobs.Actions;

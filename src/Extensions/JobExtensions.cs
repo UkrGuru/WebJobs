@@ -7,7 +7,7 @@ public static class JobExtensions
 {
     public static dynamic? CreateAction(this Job job)
     {
-        ArgumentNullException.ThrowIfNull(job?.ActionType, "ActionType");
+        ArgumentNullException.ThrowIfNull(job.ActionType);
 
         var type = Type.GetType(job.ActionType) ?? Type.GetType($"UkrGuru.WebJobs.Actions.{job.ActionType}");
         ArgumentNullException.ThrowIfNull(type);

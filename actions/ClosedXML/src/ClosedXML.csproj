@@ -9,7 +9,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <AssemblyName>UkrGuru.WebJobs.Actions.ClosedXML</AssemblyName>
     <RootNamespace>UkrGuru.WebJobs.Actions.ClosedXML</RootNamespace>
-    <Version>3.6.7</Version>
+    <Version>3.7.0</Version>
     <Description>UkrGuru.WebJobs.Actions.ClosedXML is additional actions for UkrGuru.WebJobs package. 
 Created on base ClosedXML package for processing files in Excel format.</Description>
     <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
@@ -18,6 +18,14 @@ Created on base ClosedXML package for processing files in Excel format.</Descrip
     <PackageTags>closedxml excel xlsx webjobs actions</PackageTags>
     <PackageReleaseNotes>Added ClosedXML.ImportFile Action for import Excel file into WJbItems table.</PackageReleaseNotes>
 
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,12 +41,12 @@ Created on base ClosedXML package for processing files in Excel format.</Descrip
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\3.6.7.0.sql" />
+    <EmbeddedResource Include="Resources\3.7.0.0.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.96.0" />
-    <PackageReference Include="UkrGuru.WebJobs" Version="3.6.7" />
+    <PackageReference Include="UkrGuru.WebJobs" Version="3.7.0" />
   </ItemGroup>
 
 </Project>

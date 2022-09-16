@@ -21,8 +21,6 @@ public class BaseAction
 
     public virtual void Init(Job job)
     {
-        job.ThrowIfNull(nameof(job));
-
         JobId = job.JobId;
 
         More.AddNew(job.JobMore);

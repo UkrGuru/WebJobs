@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Oleksandr Viktor (UkrGuru). All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+using UkrGuru.Extensions;
 using UkrGuru.WebJobs.Data;
 
 namespace UkrGuru.WebJobs.Actions;
@@ -10,7 +11,9 @@ public class DownloadPageAction : BaseAction
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var url = More.GetValue("url").ThrowIfBlank("url");
+
         var filename = GetLocalFileName(More.GetValue("filename") ?? "file.txt");
+
         var result_name = More.GetValue("result_name") ?? "next_body";
 
         await LogHelper.LogDebugAsync(nameof(DownloadPageAction), new { jobId = JobId, url, filename, result_name }, cancellationToken);

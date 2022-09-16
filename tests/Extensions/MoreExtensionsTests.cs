@@ -19,7 +19,7 @@ public class MoreExtensionsTests
         more.AddNew(JsonSerializer.Serialize(new { type = "Action", timeout = 60, amount = 123.45, files }));
 
         Assert.Equal("Rule", more.GetValue("type"));
-        Assert.Empty(more.GetValue("data"));
+        Assert.Empty(more.GetValue("data")!);
         Assert.Null(more.GetValue("data1"));
         Assert.Null(more.GetValue("data2"));
         Assert.Equal(true, more.GetValue("enabled", false));
