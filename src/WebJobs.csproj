@@ -15,7 +15,7 @@
 Supports CRON expressions in Rules. Supports polymorphism for Action/Rule/Job parameters and
 transferring the result of the Job to the next Job, based on the results of the current Job. 
 Uses UkrGuru.SqlJson to quickly run stored procedures on sql server.</Description>
-    <Version>3.7.1</Version>
+    <Version>3.7.2</Version>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>C:\Users\ALEX\source\repos\!UkrGuru\!!!\UkrGuru.pfx</AssemblyOriginatorKeyFile>
     <PackageTags>scheduler worker sftp pop3 email template ssrs csv excel xlsx .net net6 sqlserver webjobs</PackageTags>
@@ -40,7 +40,7 @@ Uses UkrGuru.SqlJson to quickly run stored procedures on sql server.</Descriptio
 
   <ItemGroup>
     <None Remove="Resources\2.1.0.sql" />
-    <None Remove="Resources\3.7.0.0.sql" />
+    <None Remove="Resources\3.7.2.0.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -66,7 +66,7 @@ Uses UkrGuru.SqlJson to quickly run stored procedures on sql server.</Descriptio
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\3.7.0.0.sql" />
+    <EmbeddedResource Include="Resources\3.7.2.0.sql" />
   </ItemGroup>
 
 </Project>

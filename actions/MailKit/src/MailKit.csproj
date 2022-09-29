@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>UkrGuru.WebJobs.Actions.MailKit</AssemblyName>
     <RootNamespace>UkrGuru.WebJobs.Actions.MailKit</RootNamespace>
-    <Version>3.7.0</Version>
+    <Version>3.7.2</Version>
     <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
     <RepositoryUrl>https://github.com/UkrGuru/WebJobs/tree/main/actions/MailKit</RepositoryUrl>
     <PackageTags>pop3 email net6 mailkit</PackageTags>
@@ -21,19 +21,19 @@ Created on base MailKit package for receive emails from the mailbox.</Descriptio
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>none</DebugType>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DebugType>none</DebugType>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\3.7.0.0.sql" />
+    <None Remove="Resources\3.7.2.0.sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\3.7.0.0.sql" />
+    <EmbeddedResource Include="Resources\3.7.2.0.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,7 +53,7 @@ Created on base MailKit package for receive emails from the mailbox.</Descriptio
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="3.4.1" />
-    <PackageReference Include="UkrGuru.WebJobs" Version="3.7.0" />
+    <PackageReference Include="UkrGuru.WebJobs" Version="3.7.2" />
   </ItemGroup>
 
 </Project>
