@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Text.Json;
 using WebJobsTests.Extensions;
+using UkrGuru.Extensions;
 
 namespace System.Reflection.Tests;
 

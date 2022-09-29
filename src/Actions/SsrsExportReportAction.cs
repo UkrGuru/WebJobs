@@ -35,7 +35,7 @@ public class SsrsExportReportAction : BaseAction
 
         var data = More.GetValue("data") ?? String.Empty;
 
-        int timeout = More.GetValue("timeout", 30) ?? 30;
+        int timeout = More.GetValue("timeout", 30);
 
         var filename = More.GetValue("filename");
         if (!string.IsNullOrEmpty(filename) && filename.Contains("{0:"))
@@ -74,9 +74,11 @@ public class SsrsExportReportAction : BaseAction
 
         response.EnsureSuccessStatusCode();
 
-        Data.File file = new() { FileName = filename };
-
-        file.FileContent = await response.Content.ReadAsByteArrayAsync(cancellationToken);
+        Data.File file = new()
+        {
+            FileName = filename,
+            FileContent = await response.Content.ReadAsByteArrayAsync(cancellationToken)
+        };
 
         var guid = await file.SetAsync(cancellationToken);
 
@@ -103,7 +105,7 @@ public class SsrsExportReportAction : BaseAction
             ".csv" => "CSV",
             ".xml" => "XML",
             ".atom" => "ATOM",
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(filename)
         };
     }
 }

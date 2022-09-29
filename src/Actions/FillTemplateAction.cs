@@ -2,7 +2,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using System.Text.RegularExpressions;
-using UkrGuru.WebJobs.Data;
+using UkrGuru.Extensions;
 
 namespace UkrGuru.WebJobs.Actions;
 
