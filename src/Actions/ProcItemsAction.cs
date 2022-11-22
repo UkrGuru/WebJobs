@@ -36,7 +36,7 @@ public class ProcItemsAction : BaseAction
             }
             catch(Exception ex)
             {
-                await LogHelper.LogErrorAsync(nameof(ProcItemsAction), 
+                await WJbLogHelper.LogErrorAsync(nameof(ProcItemsAction), 
                     new { jobId = JobId, fileId, itemNo = i, proc, errMsg = ex.Message }, cancellationToken);
             }
             finally
@@ -48,7 +48,7 @@ public class ProcItemsAction : BaseAction
             if (itemNo != null) break; else i++;
         }
 
-        await LogHelper.LogInformationAsync(nameof(ProcItemsAction), 
+        await WJbLogHelper.LogInformationAsync(nameof(ProcItemsAction), 
             new { jobId = JobId, result = "OK", count = itemNo > 0 ? 1 : i + 1 }, cancellationToken);
 
         return true;

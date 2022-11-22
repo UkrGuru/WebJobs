@@ -57,9 +57,9 @@ public class WebJobsTest
     {
         var content = new byte[256]; for (int i = 0; i < 256; i++) content[i] = (byte)i;
 
-        var guid = await DbHelper.FromProcAsync<string?>("WJbFiles_Ins", new File { FileName = "test.bin", FileContent = content });
+        var guid = await DbHelper.FromProcAsync<string?>("WJbFiles_Ins", new WJbFile { FileName = "test.bin", FileContent = content });
 
-        var file = await DbHelper.FromProcAsync<File>("WJbFiles_Get", guid);
+        var file = await DbHelper.FromProcAsync<WJbFile>("WJbFiles_Get", guid);
 
         Assert.Equal(file?.FileContent, content);
     }
@@ -188,7 +188,7 @@ public class WebJobsTest
             guid = ((More)action.More).GetValue("next_body");
         }
 
-        var file = DbHelper.FromProc<File>("WJbFiles_Get", guid);
+        var file = DbHelper.FromProc<WJbFile>("WJbFiles_Get", guid);
 
         if (file?.FileContent != null)
         {

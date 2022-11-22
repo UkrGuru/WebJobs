@@ -48,13 +48,13 @@ public class BaseAction
         foreach (var more in More.Where(item => item.Key.StartsWith(next_prefix)))
             next_more.Add(more.Key[next_prefix.Length..], more.Value);
 
-        await LogHelper.LogDebugAsync("NextAsync", new { jobId = JobId, next_rule, next_more }, cancellationToken);
+        await WJbLogHelper.LogDebugAsync("NextAsync", new { jobId = JobId, next_rule, next_more }, cancellationToken);
 
         var next_jobId = await DbHelper.FromProcAsync<int?>("WJbQueue_Ins",
             new { Rule = next_rule, RulePriority = (byte)Priorities.ASAP, RuleMore = next_more },
             cancellationToken: cancellationToken);
 
-        await LogHelper.LogInformationAsync("NextAsync", new { jobId = JobId, result = "OK", next_jobId }, cancellationToken);
+        await WJbLogHelper.LogInformationAsync("NextAsync", new { jobId = JobId, result = "OK", next_jobId }, cancellationToken);
 
         return true;
     }

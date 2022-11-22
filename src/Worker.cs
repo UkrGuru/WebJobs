@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using UkrGuru.Extensions;
 using UkrGuru.SqlJson;
 using UkrGuru.WebJobs.Data;
 
@@ -46,7 +47,7 @@ public class Worker : BackgroundService
                         exec_result = false;
 
                         _logger.LogError(ex, $"Job #{jobId} crashed.", nameof(ExecuteAsync));
-                        await LogHelper.LogErrorAsync($"Job #{jobId} crashed.", new { jobId, errMsg = ex.Message }, stoppingToken);
+                        await WJbLogHelper.LogErrorAsync($"Job #{jobId} crashed.", new { jobId, errMsg = ex.Message }, stoppingToken);
                     }
                     finally
                     {
@@ -65,7 +66,7 @@ public class Worker : BackgroundService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Worker.ExecuteAsync Error", nameof(ExecuteAsync));
-                await LogHelper.LogErrorAsync("Worker.ExecuteAsync Error", new { errMsg = ex.Message }, stoppingToken);
+                await WJbLogHelper.LogErrorAsync("Worker.ExecuteAsync Error", new { errMsg = ex.Message }, stoppingToken);
             }
 
             if (_delay > 0) 

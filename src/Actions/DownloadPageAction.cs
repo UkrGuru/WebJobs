@@ -16,18 +16,17 @@ public class DownloadPageAction : BaseAction
 
         var result_name = More.GetValue("result_name") ?? "next_body";
 
-        await LogHelper.LogDebugAsync(nameof(DownloadPageAction), new { jobId = JobId, url, filename, result_name }, cancellationToken);
+        await WJbLogHelper.LogDebugAsync(nameof(DownloadPageAction), new { jobId = JobId, url, filename, result_name }, cancellationToken);
 
         var content = null as string;
 
-        using (HttpClient client = new())
-        {
-            content = await client.GetStringAsync(url, cancellationToken);
-        }
+        using HttpClient client = new();
+
+        content = await client.GetStringAsync(url, cancellationToken);
 
         content = await WJbFileHelper.SetAsync(content, filename, false, cancellationToken);
 
-        await LogHelper.LogInformationAsync(nameof(DownloadPageAction), new { jobId = JobId, result = "OK", content = ShortStr(content, 200) }, cancellationToken);
+        await WJbLogHelper.LogInformationAsync(nameof(DownloadPageAction), new { jobId = JobId, result = "OK", content }, cancellationToken);
 
         if (!string.IsNullOrEmpty(result_name)) More[result_name] = content;
 

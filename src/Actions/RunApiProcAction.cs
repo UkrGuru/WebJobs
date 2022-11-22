@@ -40,7 +40,7 @@ public class RunApiProcAction : BaseAction
         var result_name = More.GetValue("result_name");
         if (string.IsNullOrEmpty(result_name)) result_name = "next_data";
 
-        await LogHelper.LogDebugAsync(nameof(RunApiProcAction), new { jobId = JobId, url = api_settings.Url, 
+        await WJbLogHelper.LogDebugAsync(nameof(RunApiProcAction), new { jobId = JobId, url = api_settings.Url, 
             proc, data = ShortStr(data, 200), body = ShortStr(body, 200), result_name }, cancellationToken);
 
         HttpMethod method = HttpMethod.Get;
@@ -72,7 +72,7 @@ public class RunApiProcAction : BaseAction
         if (responseBody != null && responseBody.StartsWith("Error:"))
             throw new Exception(responseBody.Replace("Error:", "").TrimStart());
 
-        await LogHelper.LogInformationAsync(nameof(RunApiProcAction), new { jobId = JobId, result = ShortStr(responseBody, 200) }, cancellationToken);
+        await WJbLogHelper.LogInformationAsync(nameof(RunApiProcAction), new { jobId = JobId, result = ShortStr(responseBody, 200) }, cancellationToken);
 
         if (!string.IsNullOrEmpty(result_name)) More[result_name] = responseBody;
 

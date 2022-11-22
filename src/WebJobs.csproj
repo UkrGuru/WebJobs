@@ -1,72 +1,69 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <Authors>Oleksandr Viktor (UkrGuru)</Authors>
-    <Company>PE VIKTOR Oleksandr Oleksandrovych</Company>
-    <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageIcon>ukrguru-logo.jpg</PackageIcon>
-    <RepositoryUrl>https://github.com/UkrGuru/WebJobs</RepositoryUrl>
-    <Description>The UkrGuru.WebJobs package is a Scheduler and N-Workers for any base( or custom) Actions in .NET apps. 
-Supports CRON expressions in Rules. Supports polymorphism for Action/Rule/Job parameters and
-transferring the result of the Job to the next Job, based on the results of the current Job. 
-Uses UkrGuru.SqlJson to quickly run stored procedures on sql server.</Description>
-    <Version>3.7.3</Version>
-    <SignAssembly>False</SignAssembly>
-    <AssemblyOriginatorKeyFile>C:\Users\ALEX\source\repos\!UkrGuru\!!!\UkrGuru.pfx</AssemblyOriginatorKeyFile>
-    <PackageTags>scheduler worker sftp pop3 email template ssrs csv excel xlsx .net net6 sqlserver webjobs</PackageTags>
-    <PackageReleaseNotes>Updated to latest version of UkrGuru.SqlJson.</PackageReleaseNotes>
-    <AssemblyName>UkrGuru.WebJobs</AssemblyName>
-    <RootNamespace>UkrGuru.WebJobs</RootNamespace>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <DebugType>none</DebugType>
-    <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <DelaySign>False</DelaySign>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Authors>UkrGuru</Authors>
+        <Company>PE VIKTOR Oleksandr Oleksandrovych</Company>
+        <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <PackageIcon>ukrguru-logo.jpg</PackageIcon>
+        <RepositoryUrl>https://github.com/UkrGuru/WebJobs</RepositoryUrl>
+        <Description>The UkrGuru.WebJobs package is a Scheduler and N-Workers for any base( or custom) Actions in .NET apps. Supports CRON expressions in Rules. Supports polymorphism for Action/Rule/Job parameters and transferring the result of the Job to the next Job, based on the results of the current Job. Uses UkrGuru.SqlJson to quickly run stored procedures on sql server.      </Description>
+        <Version>3.7.7</Version>
+        <SignAssembly>False</SignAssembly>
+        <AssemblyOriginatorKeyFile>C:\Users\ALEX\source\repos\!UkrGuru\!!!\UkrGuru.pfx</AssemblyOriginatorKeyFile>
+        <PackageTags>scheduler worker sftp pop3 email template ssrs csv excel xlsx .net sqlserver webjobs</PackageTags>
+        <PackageReleaseNotes></PackageReleaseNotes>
+        <AssemblyName>UkrGuru.WebJobs</AssemblyName>
+        <RootNamespace>UkrGuru.WebJobs</RootNamespace>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <DebugType>none</DebugType>
+        <GenerateDocumentationFile>False</GenerateDocumentationFile>
+        <DelaySign>False</DelaySign>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DebugType>portable</DebugType>
-    <DebugSymbols>false</DebugSymbols>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugType>full</DebugType>
+        <DebugSymbols>false</DebugSymbols>
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>portable</DebugType>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DebugType>full</DebugType>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Resources\2.1.0.sql" />
-    <None Remove="Resources\3.7.3.0.sql" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Resources\2.1.0.sql" />
+        <None Remove="Resources\InitDb.sql" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
-    <PackageReference Include="UkrGuru.SqlJson" Version="5.0.4" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+        <PackageReference Include="UkrGuru.SqlJson" Version="5.0.11" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Properties\" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="..\LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\ukrguru-logo.jpg">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\3.7.3.0.sql" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="..\LICENSE.txt">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </EmbeddedResource>
+        <EmbeddedResource Include="..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </EmbeddedResource>
+        <EmbeddedResource Include="..\ukrguru-logo.jpg">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\InitDb.sql" />
+    </ItemGroup>
 
 </Project>

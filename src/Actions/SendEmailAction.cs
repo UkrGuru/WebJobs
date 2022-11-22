@@ -58,7 +58,7 @@ public class SendEmailAction : BaseAction
         var attachments = More.GetValue("attachments", (object[]?)null);
         if (attachments == null && !string.IsNullOrEmpty(attachment)) attachments = new[] { attachment };
 
-        await LogHelper.LogDebugAsync(nameof(SendEmailAction), new { jobId = JobId, to, cc, bcc, subject, 
+        await WJbLogHelper.LogDebugAsync(nameof(SendEmailAction), new { jobId = JobId, to, cc, bcc, subject, 
             body = ShortStr(body, 200), attachments }, cancellationToken);
 
         if (Guid.TryParse(body, out var guidBody))
@@ -102,7 +102,7 @@ public class SendEmailAction : BaseAction
 
         await smtp.SendMailAsync(message, cancellationToken);
 
-        await LogHelper.LogInformationAsync(nameof(SendEmailAction), new { jobId = JobId, result = "OK" }, cancellationToken);
+        await WJbLogHelper.LogInformationAsync(nameof(SendEmailAction), new { jobId = JobId, result = "OK" }, cancellationToken);
 
         return true;
     }

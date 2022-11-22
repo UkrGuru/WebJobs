@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net7.0;net6.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
@@ -9,7 +9,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <AssemblyName>UkrGuru.WebJobs.Actions.ClosedXML</AssemblyName>
     <RootNamespace>UkrGuru.WebJobs.Actions.ClosedXML</RootNamespace>
-    <Version>3.7.3</Version>
+    <Version>3.7.4</Version>
     <Description>UkrGuru.WebJobs.Actions.ClosedXML is additional actions for UkrGuru.WebJobs package. 
 Created on base ClosedXML package for processing files in Excel format.</Description>
     <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
@@ -41,12 +41,12 @@ Created on base ClosedXML package for processing files in Excel format.</Descrip
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\3.7.3.0.sql" />
+    <EmbeddedResource Include="Resources\3.7.4.sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.96.0" />
-    <PackageReference Include="UkrGuru.WebJobs" Version="3.7.3" />
+    <PackageReference Include="ClosedXML" Version="0.97.0" />
+    <PackageReference Include="UkrGuru.WebJobs" Version="3.7.5" />
   </ItemGroup>
 
 </Project>

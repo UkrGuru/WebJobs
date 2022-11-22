@@ -27,7 +27,7 @@ public class ParseTextAction : BaseAction
 
         More[result_name] = goals.GetResult();
 
-        await LogHelper.LogInformationAsync(nameof(SendEmailAction), new { jobId = JobId, result = ShortStr(More.GetValue(result_name), 200) }, cancellationToken);
+        await WJbLogHelper.LogInformationAsync(nameof(SendEmailAction), new { jobId = JobId, result = ShortStr(More.GetValue(result_name), 200) }, cancellationToken);
 
         return true;
     }

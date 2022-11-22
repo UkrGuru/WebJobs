@@ -33,7 +33,7 @@ public class SsrsExportReportAction : BaseAction
 
         var report = More.GetValue("report").ThrowIfBlank("report");
 
-        var data = More.GetValue("data") ?? String.Empty;
+        var data = More.GetValue("data") ?? string.Empty;
 
         int timeout = More.GetValue("timeout", 30);
 
@@ -54,7 +54,7 @@ public class SsrsExportReportAction : BaseAction
             url += $"&data={HttpUtility.UrlEncode(data)}";
         }
 
-        await LogHelper.LogDebugAsync(nameof(DownloadPageAction), new { jobId = JobId, url, timeout, filename, result_name }, cancellationToken);
+        await WJbLogHelper.LogDebugAsync(nameof(DownloadPageAction), new { jobId = JobId, url, timeout, filename, result_name }, cancellationToken);
 
         // WebClient is obsolete
         // using WebClient client = new();
@@ -74,7 +74,7 @@ public class SsrsExportReportAction : BaseAction
 
         response.EnsureSuccessStatusCode();
 
-        Data.File file = new()
+         WJbFile file = new()
         {
             FileName = filename,
             FileContent = await response.Content.ReadAsByteArrayAsync(cancellationToken)
@@ -87,7 +87,7 @@ public class SsrsExportReportAction : BaseAction
             More[result_name] = guid;
         }
 
-        await LogHelper.LogInformationAsync(nameof(DownloadPageAction), new { jobId = JobId, result = "OK", guid }, cancellationToken);
+        await WJbLogHelper.LogInformationAsync(nameof(DownloadPageAction), new { jobId = JobId, result = "OK", guid }, cancellationToken);
 
         return true;
     }

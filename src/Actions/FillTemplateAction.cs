@@ -35,13 +35,13 @@ public class FillTemplateAction : BaseAction
             foreach (var key in from key in vars where vals.ContainsKey(key) select key)
                 template = template.Replace(key, vals.GetValue(key));
 
-            await LogHelper.LogDebugAsync(nameof(FillTemplateAction), 
+            await WJbLogHelper.LogDebugAsync(nameof(FillTemplateAction), 
                 new { jobId = JobId, tkey, template = ShortStr(template, 200) }, cancellationToken);
 
             More[$"next_{tkey}"] = template;
         }
 
-        await LogHelper.LogInformationAsync(nameof(FillTemplateAction), new { jobId = JobId, result = "OK" }, cancellationToken);
+        await WJbLogHelper.LogInformationAsync(nameof(FillTemplateAction), new { jobId = JobId, result = "OK" }, cancellationToken);
 
         return true;
     }
