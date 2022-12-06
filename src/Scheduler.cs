@@ -7,12 +7,24 @@ using UkrGuru.Extensions;
 using UkrGuru.SqlJson;
 
 namespace UkrGuru.WebJobs;
-
+/// <summary>
+/// 
+/// </summary>
 public class Scheduler : BackgroundService
 {
     private readonly ILogger<Scheduler> _logger;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="logger"></param>
     public Scheduler(ILogger<Scheduler> logger) => _logger = logger;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stoppingToken"></param>
+    /// <returns></returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await DbHelper.ExecCommandAsync("DECLARE @Delay varchar(10) = '00:00:' + FORMAT(60 - DATEPART(SECOND, GETDATE()), '00'); WAITFOR DELAY @Delay;", timeout: 100);
@@ -25,6 +37,11 @@ public class Scheduler : BackgroundService
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stoppingToken"></param>
+    /// <returns></returns>
     protected virtual async Task CreateCronJobs(CancellationToken stoppingToken)
     {
         try

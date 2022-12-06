@@ -7,8 +7,16 @@ using UkrGuru.WebJobs.Data;
 
 namespace UkrGuru.WebJobs.Actions;
 
+/// <summary>
+/// 
+/// </summary>
 public class ParseTextAction : BaseAction
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var text = More.GetValue("text");

@@ -6,8 +6,16 @@ using UkrGuru.SqlJson;
 
 namespace UkrGuru.WebJobs.Actions;
 
+/// <summary>
+/// 
+/// </summary>
 public class RunSqlProcAction : BaseAction
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var proc = More.GetValue("proc").ThrowIfBlank("proc");

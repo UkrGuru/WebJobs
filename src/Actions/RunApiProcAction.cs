@@ -5,21 +5,38 @@ using System.Text;
 using System.Text.Json.Serialization;
 using UkrGuru.Extensions;
 using UkrGuru.SqlJson;
-using UkrGuru.WebJobs.Data;
 
 namespace UkrGuru.WebJobs.Actions;
 
+/// <summary>
+/// 
+/// </summary>
 public class RunApiProcAction : BaseAction
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ApiSettings
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonPropertyName("url")]
         public string? Url { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonPropertyName("key")]
         public string? Key { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var api_settings_name = More.GetValue("api_settings_name").ThrowIfBlank("api_settings_name");

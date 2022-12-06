@@ -9,6 +9,9 @@ using UkrGuru.WebJobs.Data;
 
 namespace UkrGuru.WebJobs;
 
+/// <summary>
+/// 
+/// </summary>
 public class Worker : BackgroundService
 {
     private const int NO_DELAY = 0;
@@ -19,8 +22,18 @@ public class Worker : BackgroundService
     private int _delay = MIN_DELAY;
 
     private readonly ILogger<Worker> _logger;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="logger"></param>
     public Worker(ILogger<Worker> logger) => _logger = logger;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stoppingToken"></param>
+    /// <returns></returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)

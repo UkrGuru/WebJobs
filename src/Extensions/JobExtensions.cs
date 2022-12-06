@@ -3,8 +3,16 @@
 
 namespace UkrGuru.WebJobs.Data;
 
+/// <summary>
+/// 
+/// </summary>
 public static class JobExtensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="job"></param>
+    /// <returns></returns>
     public static dynamic? CreateAction(this Job job)
     {
         ArgumentNullException.ThrowIfNull(job.ActionType);

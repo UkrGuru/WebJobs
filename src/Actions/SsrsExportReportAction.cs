@@ -6,24 +6,43 @@ using System.Text.Json.Serialization;
 using System.Web;
 using UkrGuru.Extensions;
 using UkrGuru.SqlJson;
-using UkrGuru.WebJobs.Data;
 
 namespace UkrGuru.WebJobs.Actions;
 
+/// <summary>
+/// 
+/// </summary>
 public class SsrsExportReportAction : BaseAction
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class SsrsSettings
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonPropertyName("baseUrl")]
         public string? BaseUrl { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonPropertyName("userName")]
         public string? UserName { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonPropertyName("password")]
         public string? Password { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var ssrs_settings_name = More.GetValue("ssrs_settings_name").ThrowIfBlank("ssrs_settings_name");
@@ -92,6 +111,12 @@ public class SsrsExportReportAction : BaseAction
         return true;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="filename"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public static string GetReportFormat(string? filename)
     {
         return (Path.GetExtension(filename)?.ToLower()) switch

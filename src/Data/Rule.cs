@@ -5,17 +5,32 @@ using System.ComponentModel.DataAnnotations;
 
 namespace UkrGuru.WebJobs.Data;
 
+/// <summary>
+/// 
+/// </summary>
 public partial class Rule: Action
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Display(Name = "Id")]
     public int RuleId { get; set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [Display(Name = "Rule")]
     public string? RuleName { get; set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [Display(Name = "Priority")]
     public Priorities RulePriority { get; set; } = Priorities.Normal;
 
+    /// <summary>
+    /// 
+    /// </summary>
     [Display(Name = "More")]
     public string? RuleMore { get; set; }
 }

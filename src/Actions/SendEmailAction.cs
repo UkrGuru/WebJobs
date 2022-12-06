@@ -7,33 +7,61 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using UkrGuru.Extensions;
 using UkrGuru.SqlJson;
-using UkrGuru.WebJobs.Data;
 
 namespace UkrGuru.WebJobs.Actions;
 
+/// <summary>
+/// 
+/// </summary>
 public class SendEmailAction : BaseAction
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class SmtpSettings
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonPropertyName("from")]
         public string? From { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonPropertyName("host")]
         public string? Host { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonPropertyName("port")]
         public int Port { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonPropertyName("enableSsl")]
         public bool EnableSsl { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonPropertyName("userName")]
         public string? UserName { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonPropertyName("password")]
         public string? Password { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var smtp_settings_name = More.GetValue("smtp_settings_name").ThrowIfBlank("smtp_settings_name");
@@ -107,5 +135,10 @@ public class SendEmailAction : BaseAction
         return true;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="body"></param>
+    /// <returns></returns>
     public static bool IsHtmlBody(string? body) => body != null && Regex.IsMatch(body, @"<\s*([^ >]+)[^>]*>.*?<\s*/\s*\1\s*>");  // or @"<[^>]+>"
 }

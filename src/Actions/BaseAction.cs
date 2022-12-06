@@ -7,6 +7,9 @@ using UkrGuru.WebJobs.Data;
 
 namespace UkrGuru.WebJobs.Actions;
 
+/// <summary>
+/// 
+/// </summary>
 public class BaseAction
 {
     private const string GOOD_RULE = "next";
@@ -15,11 +18,25 @@ public class BaseAction
     private const string GOOD_PREFIX = GOOD_RULE + "_";
     private const string FAIL_PREFIX = FAIL_RULE + "_";
 
+    /// <summary>
+    /// 
+    /// </summary>
     public int JobId { get; set; }
+    
+    /// <summary>
+    /// 
+    /// </summary>
     public More More { get; set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public BaseAction() => More = new More();
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="job"></param>
     public virtual void Init(Job job)
     {
         JobId = job.JobId;
@@ -29,6 +46,11 @@ public class BaseAction
         More.AddNew(job.ActionMore);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public virtual async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         await Task.Delay(100, cancellationToken);
@@ -36,6 +58,12 @@ public class BaseAction
         return true;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="exec_result"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public virtual async Task<bool> NextAsync(bool exec_result, CancellationToken cancellationToken = default)
     {
         var next_prefix = exec_result ? GOOD_PREFIX : FAIL_PREFIX;
@@ -59,8 +87,19 @@ public class BaseAction
         return true;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="text"></param>
+    /// <param name="maxLength"></param>
+    /// <returns></returns>
     public static string? ShortStr(string? text, int maxLength) => (!string.IsNullOrEmpty(text)
         && text.Length > maxLength) ? string.Concat(text.AsSpan(0, maxLength), "...") : text;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <returns></returns>
     public virtual string GetLocalFileName(string fileName) => $"#{this.JobId}-{fileName}";
 }

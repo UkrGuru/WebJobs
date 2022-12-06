@@ -2,12 +2,19 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using UkrGuru.Extensions;
-using UkrGuru.WebJobs.Data;
 
 namespace UkrGuru.WebJobs.Actions;
 
+/// <summary>
+/// 
+/// </summary>
 public class DownloadPageAction : BaseAction
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var url = More.GetValue("url").ThrowIfBlank("url");

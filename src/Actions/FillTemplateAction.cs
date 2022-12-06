@@ -6,8 +6,16 @@ using UkrGuru.Extensions;
 
 namespace UkrGuru.WebJobs.Actions;
 
+/// <summary>
+/// 
+/// </summary>
 public class FillTemplateAction : BaseAction
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         string template_prefix = "template_", tvalue_prefix = "tvalue_";

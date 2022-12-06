@@ -5,8 +5,18 @@ using System.Text.Json;
 
 namespace UkrGuru.WebJobs.Data;
 
+/// <summary>
+/// 
+/// </summary>
 public static class ParsingGoalExtensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="goals"></param>
+    /// <param name="text"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     public static ParsingGoal[] AppendRootNode(this ParsingGoal[] goals, string text)
     {
         var root = goals.FirstOrDefault(e => e.Name == string.Empty);
@@ -18,6 +28,13 @@ public static class ParsingGoalExtensions
         return goals.Append(new ParsingGoal() { Name= "",  Value = text }).ToArray();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="goals"></param>
+    /// <param name="goal"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     public static string? ParseValue(this ParsingGoal[] goals, ParsingGoal? goal)
     {
         if (string.IsNullOrEmpty(goal?.Name)) return goal?.Value;
@@ -33,8 +50,19 @@ public static class ParsingGoalExtensions
         return Crop(goals[parentIndex].Value, goal?.Start, goal?.End);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="goals"></param>
+    /// <param name="name"></param>
+    /// <returns></returns>
     public static bool IsLeaf(this ParsingGoal[] goals, string name) => !goals.Any(e => e.Parent == name);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="goals"></param>
+    /// <returns></returns>
     public static string? GetResult(this ParsingGoal[] goals)
     {
         var dict = new Dictionary<string, object?>();
@@ -47,6 +75,13 @@ public static class ParsingGoalExtensions
         return JsonSerializer.Serialize(dict);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="text"></param>
+    /// <param name="start"></param>
+    /// <param name="end"></param>
+    /// <returns></returns>
     public static string? Crop(string? text, string? start, string? end = default)
     {
         if (text == null) return null;

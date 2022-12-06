@@ -10,9 +10,19 @@ using LogLevel = UkrGuru.Extensions.WJbLog.Level;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class ServiceCollectionExtensions
+/// <summary>
+/// 
+/// </summary>
+public static class UkrGuruWebJobsExtensions
 {
-    public static void AddWebJobs(this IServiceCollection services, string connectionString, LogLevel logLevel = LogLevel.Debug, int nThreads = 4)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="connectionString"></param>
+    /// <param name="logLevel"></param>
+    /// <param name="nThreads"></param>
+    public static void AddWebJobs(this IServiceCollection services, string? connectionString = null, LogLevel logLevel = LogLevel.Debug, int nThreads = 4)
     {
         services.AddUkrGuruSqlJsonExt(connectionString, logLevel);
 

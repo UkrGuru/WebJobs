@@ -3,12 +3,19 @@
 
 using UkrGuru.Extensions;
 using UkrGuru.SqlJson;
-using UkrGuru.WebJobs.Data;
 
 namespace UkrGuru.WebJobs.Actions;
 
+/// <summary>
+/// 
+/// </summary>
 public class ProcItemsAction : BaseAction
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var fileId = More.GetValue("fileId").ThrowIfBlank("fileId");
