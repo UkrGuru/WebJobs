@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net7.0;net6.0</TargetFrameworks>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
@@ -9,7 +9,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <AssemblyName>UkrGuru.WebJobs.Actions.ClosedXML</AssemblyName>
     <RootNamespace>UkrGuru.WebJobs.Actions.ClosedXML</RootNamespace>
-    <Version>3.7.4</Version>
+    <Version>3.7.8</Version>
     <Description>UkrGuru.WebJobs.Actions.ClosedXML is additional actions for UkrGuru.WebJobs package. 
 Created on base ClosedXML package for processing files in Excel format.</Description>
     <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
@@ -17,7 +17,6 @@ Created on base ClosedXML package for processing files in Excel format.</Descrip
     <RepositoryUrl>https://github.com/UkrGuru/WebJobs/tree/main/actions/ClosedXML</RepositoryUrl>
     <PackageTags>closedxml excel xlsx webjobs actions</PackageTags>
     <PackageReleaseNotes>Added ClosedXML.ImportFile Action for import Excel file into WJbItems table.</PackageReleaseNotes>
-
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -41,12 +40,12 @@ Created on base ClosedXML package for processing files in Excel format.</Descrip
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\3.7.4.sql" />
+    <EmbeddedResource Include="Resources\InitDb.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.97.0" />
-    <PackageReference Include="UkrGuru.WebJobs" Version="3.7.5" />
+    <PackageReference Include="UkrGuru.WebJobs" Version="3.7.8" />
   </ItemGroup>
 
 </Project>

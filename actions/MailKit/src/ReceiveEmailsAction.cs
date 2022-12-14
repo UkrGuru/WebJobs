@@ -44,7 +44,7 @@ public class ReceiveEmailsAction : BaseAction
 
         var proc_rule = More.GetValue("proc_rule");
 
-        await LogHelper.LogDebugAsync(funcName, new { jobId, pop3_settings_name, proc_rule }, cancellationToken);
+        await WJbLogHelper.LogDebugAsync(funcName, new { jobId, pop3_settings_name, proc_rule }, cancellationToken);
 
         using (var client = new Pop3Client())
         {
@@ -58,7 +58,7 @@ public class ReceiveEmailsAction : BaseAction
 
                 var message = await client.GetMessageAsync(i, cancellationToken: cancellationToken);
 
-                var fileBody = new Data.File()
+                var fileBody = new WJbFile()
                 {
                     FileName = GetLocalFileName(message.HtmlBody == null ? "body.txt" : "body.html"),
                     FileContent = Encoding.UTF8.GetBytes(message.TextBody ?? message.HtmlBody)
@@ -66,7 +66,7 @@ public class ReceiveEmailsAction : BaseAction
 
                 var guidBody = await fileBody.SetAsync(cancellationToken);
 
-                await LogHelper.LogInformationAsync(funcName, new { jobId, result = $"Added Email Body: {guidBody}." });
+                await WJbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Added Email Body: {guidBody}." });
 
                 var attachments = new List<string>();
                 foreach (var attachment in message.Attachments)
@@ -76,13 +76,13 @@ public class ReceiveEmailsAction : BaseAction
                         var ms = new MemoryStream();
                         await part.Content.DecodeToAsync(ms, cancellationToken: cancellationToken);
 
-                        var file = new Data.File() { FileName = GetLocalFileName(part.FileName), FileContent = ms.ToArray() };
+                        var file = new WJbFile() { FileName = GetLocalFileName(part.FileName), FileContent = ms.ToArray() };
 
                         var fileId = await file.SetAsync(cancellationToken);
 
                         attachments.Add(fileId);
 
-                        await LogHelper.LogInformationAsync(funcName, new { jobId, result = $"Added Email Attachment: {fileId}." });
+                        await WJbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Added Email Attachment: {fileId}." });
                     }
                 }
 
@@ -102,7 +102,7 @@ public class ReceiveEmailsAction : BaseAction
                         }
                     }, cancellationToken: cancellationToken);
 
-                    await LogHelper.LogInformationAsync(funcName, new { jobId, result = $"Added Email Job: {email_jobId}." });
+                    await WJbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Added Email Job: {email_jobId}." });
                 }
 
                 await client.DeleteMessageAsync(i, cancellationToken: cancellationToken);
@@ -111,7 +111,7 @@ public class ReceiveEmailsAction : BaseAction
             await client.DisconnectAsync(true, cancellationToken: cancellationToken);
         }
 
-        await LogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK" }, cancellationToken);
+        await WJbLogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK" }, cancellationToken);
 
         return true;
     }

@@ -21,7 +21,7 @@ public class PutFilesAction : SshNetAction
         var files = More.GetValue("files", (object[])null);
         ArgumentNullException.ThrowIfNull(files);
 
-        await LogHelper.LogDebugAsync(funcName, new { jobId, sshnet_settings_name, remote_path, files }, cancellationToken);
+        await WJbLogHelper.LogDebugAsync(funcName, new { jobId, sshnet_settings_name, remote_path, files }, cancellationToken);
 
         using var sftp = await CreateSftpClient(sshnet_settings_name, cancellationToken);
         {
@@ -37,11 +37,11 @@ public class PutFilesAction : SshNetAction
 
                     await sftp.UploadFileAsync(remote_path, file, cancellationToken);
 
-                    await LogHelper.LogInformationAsync(funcName, new { jobId, errMsg = $"Uploaded: {file}." }, cancellationToken);
+                    await WJbLogHelper.LogInformationAsync(funcName, new { jobId, errMsg = $"Uploaded: {file}." }, cancellationToken);
                 }
                 catch (Exception ex)
                 {
-                    await LogHelper.LogErrorAsync(funcName, new { jobId, errMsg = $"Failed: {file}. Error: {ex.Message}." }, cancellationToken);
+                    await WJbLogHelper.LogErrorAsync(funcName, new { jobId, errMsg = $"Failed: {file}. Error: {ex.Message}." }, cancellationToken);
                     throw;
                 }
             }
@@ -49,7 +49,7 @@ public class PutFilesAction : SshNetAction
             sftp.Disconnect();
         }
 
-        await LogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK" }, cancellationToken);
+        await WJbLogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK" }, cancellationToken);
 
         return true;
     }

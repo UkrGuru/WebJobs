@@ -2,8 +2,8 @@ using System.Reflection;
 using UkrGuru.SqlJson;
 using Xunit;
 using System.Text;
-using Data=UkrGuru.WebJobs.Data;
 using UkrGuru.WebJobs.Data;
+using UkrGuru.Extensions;
 
 namespace SshNetTests;
 
@@ -47,7 +47,7 @@ public class SshNetTests
     [Fact]
     public async Task SshNetTest()
     {
-        var wjbFile = new Data.File() { FileName = "1.txt", FileContent = Encoding.UTF8.GetBytes(new String('1', 4096)) };
+        var wjbFile = new WJbFile() { FileName = "1.txt", FileContent = Encoding.UTF8.GetBytes(new String('1', 4096)) };
 
         var guidFile = await wjbFile.SetAsync();
 

@@ -3,7 +3,7 @@
 
 using Renci.SshNet;
 using Renci.SshNet.Sftp;
-using UkrGuru.WebJobs.Data;
+using UkrGuru.Extensions;
 
 namespace UkrGuru.WebJobs.Actions.SshNet;
 

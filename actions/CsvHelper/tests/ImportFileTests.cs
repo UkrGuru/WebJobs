@@ -1,9 +1,9 @@
 using System.Reflection;
 using System.Text;
 using UkrGuru.SqlJson;
-using Data = UkrGuru.WebJobs.Data;
 using UkrGuru.WebJobs.Data;
 using Xunit;
+using UkrGuru.Extensions;
 
 namespace CsvHelperTests
 {
@@ -150,7 +150,7 @@ namespace CsvHelperTests
 100,Barbara,Thomas,60,Hasoh River,Fokukte,IA,96921,RED,06/19/1995
 ";
 
-            var wjbFile = new Data.File() { FileName = "customers.csv", FileContent = Encoding.UTF8.GetBytes(csv) };
+            var wjbFile = new WJbFile() { FileName = "customers.csv", FileContent = Encoding.UTF8.GetBytes(csv) };
 
             var guidFile = await wjbFile.SetAsync();
 

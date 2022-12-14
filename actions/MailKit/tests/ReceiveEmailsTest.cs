@@ -1,10 +1,9 @@
 using System.Reflection;
 using UkrGuru.SqlJson;
-using Data = UkrGuru.WebJobs.Data;
 using UkrGuru.WebJobs.Data;
 using Xunit;
 using System.Text;
-using System.Net;
+using UkrGuru.Extensions;
 
 namespace MailKitTests
 {
@@ -48,7 +47,7 @@ namespace MailKitTests
         [Fact]
         public async Task ReceiveEmailsTestAsync()
         {
-            var wjbFile = new Data.File() { FileName = "1.txt", FileContent = Encoding.UTF8.GetBytes(new String('1', 4096)) };
+            var wjbFile = new WJbFile() { FileName = "1.txt", FileContent = Encoding.UTF8.GetBytes(new String('1', 4096)) };
 
             var guidFile = await wjbFile.SetAsync();
 

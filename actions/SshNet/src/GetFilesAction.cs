@@ -22,7 +22,7 @@ public class GetFilesAction : SshNetAction
 
         var proc_rule = More.GetValue("proc_rule"); 
         
-        await LogHelper.LogDebugAsync(funcName, new { jobId, sshnet_settings_name, remote_path, proc_rule }, cancellationToken);
+        await WJbLogHelper.LogDebugAsync(funcName, new { jobId, sshnet_settings_name, remote_path, proc_rule }, cancellationToken);
 
         using var sftp = await CreateSftpClient(sshnet_settings_name, cancellationToken);
         {
@@ -38,13 +38,13 @@ public class GetFilesAction : SshNetAction
 
                 try
                 {
-                    var wjbFile = new Data.File() { FileName = GetLocalFileName(sftpFile.Name) };
+                    var wjbFile = new WJbFile() { FileName = GetLocalFileName(sftpFile.Name) };
                     
                     wjbFile.FileContent = await sftp.ReadAllBytesAsync(remoteFullName, cancellationToken);
 
                     var guidFile = await wjbFile.SetAsync(cancellationToken);
 
-                    await LogHelper.LogInformationAsync(funcName, new { jobId, result = $"Saved File: {guidFile}." });
+                    await WJbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Saved File: {guidFile}." });
 
                     if (!string.IsNullOrEmpty(proc_rule) && !string.IsNullOrEmpty(guidFile))
                     {
@@ -55,16 +55,16 @@ public class GetFilesAction : SshNetAction
                             RuleMore = new { file = guidFile }
                         }, cancellationToken: cancellationToken);
 
-                        await LogHelper.LogInformationAsync(funcName, new { jobId, result = $"Created Proc Job: {proc_jobId}." });
+                        await WJbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Created Proc Job: {proc_jobId}." });
                     }
 
                     await sftp.DeleteFileAsync(remoteFullName, cancellationToken);
 
-                    await LogHelper.LogInformationAsync(funcName, new { jobId, errMsg = $"Downloaded: {remoteFullName}." }, cancellationToken);
+                    await WJbLogHelper.LogInformationAsync(funcName, new { jobId, errMsg = $"Downloaded: {remoteFullName}." }, cancellationToken);
                 }
                 catch (Exception ex)
                 {
-                    await LogHelper.LogErrorAsync(funcName, new { jobId, errMsg = $"Failed: {remoteFullName}. Error: {ex.Message}." }, cancellationToken);
+                    await WJbLogHelper.LogErrorAsync(funcName, new { jobId, errMsg = $"Failed: {remoteFullName}. Error: {ex.Message}." }, cancellationToken);
                     throw;
                 }
             }
@@ -72,7 +72,7 @@ public class GetFilesAction : SshNetAction
             sftp.Disconnect();
         }
 
-        await LogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK" }, cancellationToken);
+        await WJbLogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK" }, cancellationToken);
 
         return true;
     }

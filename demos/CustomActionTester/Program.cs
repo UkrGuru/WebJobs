@@ -4,8 +4,8 @@
 using System.Reflection;
 using System.Text;
 using UkrGuru.SqlJson;
-using Data=UkrGuru.WebJobs.Data;
 using UkrGuru.WebJobs.Data;
+using UkrGuru.Extensions;
 
 InitWebJobsDb("MyWebJobsTest");
 
@@ -13,7 +13,7 @@ Assembly.GetExecutingAssembly().InitDb();
 
 try
 {
-    var wjbFile = new Data.File() { FileName = "1.txt", FileContent = Encoding.UTF8.GetBytes(new String('1', 4096)) };
+    var wjbFile = new WJbFile() { FileName = "1.txt", FileContent = Encoding.UTF8.GetBytes(new String('1', 4096)) };
 
     var guidFile = await wjbFile.SetAsync();
 

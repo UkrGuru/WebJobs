@@ -21,9 +21,9 @@ public class ImportFileAction: BaseAction
         var file = More.GetValue("file");
         ArgumentNullException.ThrowIfNull(file);
 
-        await LogHelper.LogDebugAsync(funcName, new { jobId, file }, cancellationToken);
+        await WJbLogHelper.LogDebugAsync(funcName, new { jobId, file }, cancellationToken);
 
-        Data.File wjbFile = null;
+        WJbFile wjbFile = null;
 
         if (Guid.TryParse(file, out var guidFile))
             wjbFile = await WJbFileHelper.GetAsync(guidFile, cancellationToken);
@@ -49,7 +49,7 @@ public class ImportFileAction: BaseAction
             count = i;
         }
 
-        await LogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK", count }, cancellationToken);
+        await WJbLogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK", count }, cancellationToken);
 
         return true;
     }

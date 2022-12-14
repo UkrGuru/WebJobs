@@ -1,7 +1,6 @@
 ﻿using ClosedXML.Excel;
 using UkrGuru.Extensions;
 using UkrGuru.SqlJson;
-using UkrGuru.WebJobs.Data;
 
 namespace UkrGuru.WebJobs.Actions.ClosedXML;
 
@@ -11,14 +10,17 @@ public class ImportFileAction : BaseAction
     {
         const string funcName = "ClosedXML.ImportFile";
 
-        var jobId = JobId;
+        var jobId = JobId; int count = 0;
 
-        var file = More.GetValue("file");
-        ArgumentNullException.ThrowIfNull(file);
+        var file = More.GetValue("file").ThrowIfBlank("file");
 
-        await LogHelper.LogDebugAsync(funcName, new { jobId, file }, cancellationToken);
+        await WJbLogHelper.LogDebugAsync(funcName, new { jobId, file }, cancellationToken);
 
-        Data.File wjbFile = null;
+        count = await DbHelper.ExecProcAsync("WJbItems_Del_File", file, cancellationToken: cancellationToken);
+
+        await WJbLogHelper.LogInformationAsync(funcName, new { jobId, proc = "WJbItems_Del_File", file, result = "OK", count }, cancellationToken);
+
+        WJbFile wjbFile = null;
 
         if (Guid.TryParse(file, out var guidFile))
             wjbFile = await WJbFileHelper.GetAsync(guidFile, cancellationToken);
@@ -26,9 +28,7 @@ public class ImportFileAction : BaseAction
         ArgumentNullException.ThrowIfNull(wjbFile);
         ArgumentNullException.ThrowIfNull(wjbFile.FileContent);
 
-        await DbHelper.ExecProcAsync("WJbItems_Del_File", file, cancellationToken: cancellationToken);
-
-        int count = 0;
+        count = 0;
 
         using (var stream = new MemoryStream(wjbFile.FileContent))
         using (var wbook = new XLWorkbook(stream))
@@ -54,7 +54,7 @@ public class ImportFileAction : BaseAction
             }
         };
 
-        await LogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK", count }, cancellationToken);
+        await WJbLogHelper.LogInformationAsync(funcName, new { jobId, proc = "WJbItems_Ins", file, result = "OK", count }, cancellationToken);
 
         return true;
     }

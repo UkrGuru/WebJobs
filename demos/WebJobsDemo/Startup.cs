@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using UkrGuru.Extensions;
 
 namespace WebJobsDemo;
 
@@ -20,7 +20,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddWebJobsDemo(connectionString: Configuration.GetConnectionString("SqlJsonConnection"),
-            logLevel: Configuration.GetValue<LogLevel>("WJbSettings:LogLevel"),
+            logLevel: Configuration.GetValue<WJbLog.Level>("WJbSettings:LogLevel"),
             nThreads: Configuration.GetValue<int>("WJbSettings:NThreads"));
 
         services.AddRazorPages();

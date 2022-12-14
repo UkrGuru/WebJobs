@@ -3,12 +3,13 @@
 
 using Microsoft.Extensions.Logging;
 using System.Reflection;
+using UkrGuru.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class WebJobsServiceCollectionExtensions
 {
-    public static void AddWebJobsDemo(this IServiceCollection services, string connectionString, LogLevel logLevel = LogLevel.Debug, int nThreads = 4)
+    public static void AddWebJobsDemo(this IServiceCollection services, string connectionString, WJbLog.Level logLevel = WJbLog.Level.Debug, int nThreads = 4)
     {
         services.AddWebJobs(connectionString, logLevel, nThreads);
 

@@ -3,6 +3,7 @@ using UkrGuru.SqlJson;
 using Data = UkrGuru.WebJobs.Data;
 using UkrGuru.WebJobs.Data;
 using Xunit;
+using UkrGuru.Extensions;
 
 namespace ClosedXMLTests
 {
@@ -48,7 +49,7 @@ namespace ClosedXMLTests
         {
             var bytes = await System.IO.File.ReadAllBytesAsync("data.xlsx");
 
-            var wjbFile = new Data.File() { FileName = "customers.csv", FileContent = bytes };
+            var wjbFile = new WJbFile() { FileName = "customers.csv", FileContent = bytes };
 
             var guidFile = await wjbFile.SetAsync();
 

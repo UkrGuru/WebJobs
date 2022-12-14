@@ -53,28 +53,6 @@ public class WebJobsTest
     }
 
     [Fact]
-    public async Task WJbFilesTests()
-    {
-        var content = new byte[256]; for (int i = 0; i < 256; i++) content[i] = (byte)i;
-
-        var guid = await DbHelper.FromProcAsync<string?>("WJbFiles_Ins", new WJbFile { FileName = "test.bin", FileContent = content });
-
-        var file = await DbHelper.FromProcAsync<WJbFile>("WJbFiles_Get", guid);
-
-        Assert.Equal(file?.FileContent, content);
-    }
-
-    [Fact]
-    public async Task WJbLogsTests()
-    {
-        await DbHelper.ExecProcAsync("WJbLogs_Ins", new { LogLevel = LogLevel.Information, Title = "Test #1", LogMore = "Test #1" });
-
-        await DbHelper.ExecProcAsync("WJbLogs_Ins", new { LogLevel = LogLevel.Information, Title = "Test #2", LogMore = new { jobId = 2, result = "OK" } });
-
-        Assert.True(true);
-    }
-
-    [Fact]
     public async Task BaseActionTest()
     {
         Job job = new() { ActionType = "BaseAction, UkrGuru.WebJobs" };
@@ -197,31 +175,6 @@ public class WebJobsTest
             var body = Text.Encoding.UTF8.GetString(file.FileContent);
 
             Assert.Contains("Oleksandr Viktor (UkrGuru)", body);
-        }
-    }
-
-    [Theory]
-    [InlineData("12345678901234567890123456789012345678901234567890")]
-    [InlineData("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")]
-    public async Task WJbFileHelperTests(string content, CancellationToken cancellationToken = default)
-    {
-        var guid1 = await WJbFileHelper.SetAsync(content, cancellationToken: cancellationToken);
-
-        var guid2 = await WJbFileHelper.SetAsync(content, cancellationToken: cancellationToken);
-
-        Assert.Equal(guid1, guid2);
-
-        var content1 = await WJbFileHelper.GetAsync(guid1, cancellationToken);
-
-        Assert.Equal(content, content1);
-
-        if (!string.IsNullOrEmpty(guid1) && Guid.TryParse(guid1, out Guid guid))
-        {
-            await WJbFileHelper.DelAsync(guid, cancellationToken);
-
-            content1 = await WJbFileHelper.GetAsync(guid1, cancellationToken);
-
-            Assert.Null(content1);
         }
     }
 
