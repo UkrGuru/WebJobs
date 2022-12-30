@@ -4,6 +4,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
 using UkrGuru.WebJobs.Data;
 
@@ -40,7 +41,7 @@ public class Worker : BackgroundService
         {
             try
             {
-                var job = await DbHelper.FromProcAsync<JobQueue>("WJbQueue_Start1st", cancellationToken: stoppingToken);
+                var job = await DbHelper.ExecAsync<JobQueue>("WJbQueue_Start1st", cancellationToken: stoppingToken);
                 if (job?.JobId > 0)
                 {
                     var jobId = job.JobId; bool exec_result = false, next_result = false;
@@ -60,11 +61,11 @@ public class Worker : BackgroundService
                         exec_result = false;
 
                         _logger.LogError(ex, $"Job #{jobId} crashed.", nameof(ExecuteAsync));
-                        await WJbLogHelper.LogErrorAsync($"Job #{jobId} crashed.", new { jobId, errMsg = ex.Message }, stoppingToken);
+                        await DbLogHelper.LogErrorAsync($"Job #{jobId} crashed.", new { jobId, errMsg = ex.Message }, stoppingToken);
                     }
                     finally
                     {
-                        _ = await DbHelper.ExecProcAsync("WJbQueue_Finish", new { JobId = jobId, 
+                        _ = await DbHelper.ExecAsync("WJbQueue_Finish", new { JobId = jobId, 
                                 JobStatus = exec_result ? JobStatus.Completed : JobStatus.Failed }, 
                                 cancellationToken: stoppingToken);
                     }
@@ -79,7 +80,7 @@ public class Worker : BackgroundService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Worker.ExecuteAsync Error", nameof(ExecuteAsync));
-                await WJbLogHelper.LogErrorAsync("Worker.ExecuteAsync Error", new { errMsg = ex.Message }, stoppingToken);
+                await DbLogHelper.LogErrorAsync("Worker.ExecuteAsync Error", new { errMsg = ex.Message }, stoppingToken);
             }
 
             if (_delay > 0) 

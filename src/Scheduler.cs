@@ -4,6 +4,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
 
 namespace UkrGuru.WebJobs;
@@ -27,7 +28,7 @@ public class Scheduler : BackgroundService
     /// <returns></returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await DbHelper.ExecCommandAsync("DECLARE @Delay varchar(10) = '00:00:' + FORMAT(60 - DATEPART(SECOND, GETDATE()), '00'); WAITFOR DELAY @Delay;", timeout: 100);
+        await DbHelper.ExecAsync("DECLARE @Delay varchar(10) = '00:00:' + FORMAT(60 - DATEPART(SECOND, GETDATE()), '00'); WAITFOR DELAY @Delay;", timeout: 100);
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -46,12 +47,12 @@ public class Scheduler : BackgroundService
     {
         try
         {
-            await DbHelper.ExecProcAsync("WJbQueue_InsCron", cancellationToken: stoppingToken);
+            await DbHelper.ExecAsync("WJbQueue_InsCron", cancellationToken: stoppingToken);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "CreateCronJobs Error", nameof(CreateCronJobs));
-            await WJbLogHelper.LogErrorAsync("CreateCronJobs Error", new { errMsg = ex.Message }, stoppingToken);
+            await DbLogHelper.LogErrorAsync("CreateCronJobs Error", new { errMsg = ex.Message }, stoppingToken);
         }
     }
 }

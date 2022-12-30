@@ -7,6 +7,7 @@ using System.Threading;
 using System.Text.Json;
 using WebJobsTests.Extensions;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Data;
 
 namespace System.Reflection.Tests;
 
@@ -22,7 +23,7 @@ public class WebJobsTest
 
         DbHelper.ConnectionString = connectionString.Replace(dbName, "master");
 
-        DbHelper.ExecCommand($"IF DB_ID('{dbName}') IS NULL CREATE DATABASE {dbName};");
+        _ = DbHelper.ExecAsync($"IF DB_ID('{dbName}') IS NULL CREATE DATABASE {dbName}; /* need more text for command type here*/").Result;
 
         DbHelper.ConnectionString = connectionString;
 
@@ -43,13 +44,13 @@ public class WebJobsTest
     [Fact]
     public async Task WJbSettingsTests()
     {
-        await DbHelper.ExecProcAsync("WJbSettings_Set", new { Name = "Name1", Value = "Value1" });
+        await DbHelper.ExecAsync("WJbSettings_Set", new { Name = "Name1", Value = "Value1" });
 
-        Assert.Equal("Value1", DbHelper.FromProc<string?>("WJbSettings_Get", "Name1"));
+        Assert.Equal("Value1", await DbHelper.ExecAsync<string?>("WJbSettings_Get", "Name1"));
 
-        await DbHelper.ExecProcAsync("WJbSettings_Set", new { Name = "Name1", Value = "Value11" });
+        await DbHelper.ExecAsync("WJbSettings_Set", new { Name = "Name1", Value = "Value11" });
 
-        Assert.Equal("Value11", DbHelper.FromProc<string?>("WJbSettings_Get", "Name1"));
+        Assert.Equal("Value11", await DbHelper.ExecAsync<string?>("WJbSettings_Get", "Name1"));
     }
 
     [Fact]
@@ -74,7 +75,7 @@ public class WebJobsTest
     [Fact]
     public async Task RunSqlProcDataTest()
     {
-        await DbHelper.ExecCommandAsync("CREATE OR ALTER PROCEDURE [dbo].[WJb_DataTest] (@Data varchar(100)) AS SELECT @Data");
+        await DbHelper.ExecAsync("CREATE OR ALTER PROCEDURE WJb_DataTest (@Data varchar(100)) AS SELECT @Data");
 
         Job job = new() { ActionType = "RunSqlProcAction, UkrGuru.WebJobs" };
         job.JobMore = @"{ ""proc"": ""DataTest"", ""data"": ""DATA"", ""result_name"": ""proc_result"" }";
@@ -96,7 +97,7 @@ public class WebJobsTest
     [Fact]
     public async Task RunSqlProcNullTest()
     {
-        await DbHelper.ExecCommandAsync("CREATE OR ALTER PROCEDURE [dbo].[WJb_NullTest] AS SELECT 'OK'");
+        await DbHelper.ExecAsync("CREATE OR ALTER PROCEDURE WJb_NullTest AS SELECT 'OK'");
 
         Job job = new() { ActionType = "RunSqlProcAction, UkrGuru.WebJobs" };
         job.JobMore = JsonSerializer.Serialize(new { proc = "NullTest", data = null as string, result_name = "proc_result" });
@@ -166,7 +167,7 @@ public class WebJobsTest
             guid = ((More)action.More).GetValue("next_body");
         }
 
-        var file = DbHelper.FromProc<WJbFile>("WJbFiles_Get", guid);
+        var file = await DbHelper.ExecAsync<DbFile>("WJbFiles_Get", guid);
 
         if (file?.FileContent != null)
         {

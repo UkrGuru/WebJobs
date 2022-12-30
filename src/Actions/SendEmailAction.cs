@@ -6,6 +6,8 @@ using System.Net.Mail;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Data;
+using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
 
 namespace UkrGuru.WebJobs.Actions;
@@ -66,7 +68,7 @@ public class SendEmailAction : BaseAction
     {
         var smtp_settings_name = More.GetValue("smtp_settings_name").ThrowIfBlank("smtp_settings_name");
 
-        var smtp_settings = await DbHelper.FromProcAsync<SmtpSettings>("WJbSettings_Get", smtp_settings_name, cancellationToken: cancellationToken);
+        var smtp_settings = await DbHelper.ExecAsync<SmtpSettings>("WJbSettings_Get", smtp_settings_name, cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(smtp_settings);
 
         var from = More.GetValue("from");
@@ -86,11 +88,19 @@ public class SendEmailAction : BaseAction
         var attachments = More.GetValue("attachments", (object[]?)null);
         if (attachments == null && !string.IsNullOrEmpty(attachment)) attachments = new[] { attachment };
 
-        await WJbLogHelper.LogDebugAsync(nameof(SendEmailAction), new { jobId = JobId, to, cc, bcc, subject, 
-            body = ShortStr(body, 200), attachments }, cancellationToken);
+        await DbLogHelper.LogDebugAsync(nameof(SendEmailAction), new
+        {
+            jobId = JobId,
+            to,
+            cc,
+            bcc,
+            subject,
+            body = ShortStr(body, 200),
+            attachments
+        }, cancellationToken);
 
         if (Guid.TryParse(body, out var guidBody))
-            body = await WJbFileHelper.GetAsync(body, cancellationToken);
+            body = await DbFileHelper.GetAsync(body, cancellationToken);
 
         MailMessage message = new(from, to, subject, body)
         {
@@ -110,13 +120,13 @@ public class SendEmailAction : BaseAction
 
                 if (Guid.TryParse(attachment, out var guidAttach))
                 {
-                    var file = await WJbFileHelper.GetAsync(guidAttach, cancellationToken);
+                    var file = await DbFileHelper.GetAsync(guidAttach, cancellationToken);
                     ArgumentNullException.ThrowIfNull(file);
                     ArgumentNullException.ThrowIfNull(file?.FileContent);
 
                     message.Attachments.Add(new Attachment(new MemoryStream(file.FileContent), file.FileName));
                 }
-                else 
+                else
                 {
                     message.Attachments.Add(new Attachment(attachment));
                 }
@@ -130,7 +140,7 @@ public class SendEmailAction : BaseAction
 
         await smtp.SendMailAsync(message, cancellationToken);
 
-        await WJbLogHelper.LogInformationAsync(nameof(SendEmailAction), new { jobId = JobId, result = "OK" }, cancellationToken);
+        await DbLogHelper.LogInformationAsync(nameof(SendEmailAction), new { jobId = JobId, result = "OK" }, cancellationToken);
 
         return true;
     }

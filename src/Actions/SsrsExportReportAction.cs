@@ -5,6 +5,8 @@ using System.Net;
 using System.Text.Json.Serialization;
 using System.Web;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Data;
+using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
 
 namespace UkrGuru.WebJobs.Actions;
@@ -47,7 +49,7 @@ public class SsrsExportReportAction : BaseAction
     {
         var ssrs_settings_name = More.GetValue("ssrs_settings_name").ThrowIfBlank("ssrs_settings_name");
 
-        var ssrs_settings = await DbHelper.FromProcAsync<SsrsSettings>("WJbSettings_Get", ssrs_settings_name, cancellationToken: cancellationToken);
+        var ssrs_settings = await DbHelper.ExecAsync<SsrsSettings>("WJbSettings_Get", ssrs_settings_name, cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(ssrs_settings?.BaseUrl);
 
         var report = More.GetValue("report").ThrowIfBlank("report");
@@ -73,12 +75,7 @@ public class SsrsExportReportAction : BaseAction
             url += $"&data={HttpUtility.UrlEncode(data)}";
         }
 
-        await WJbLogHelper.LogDebugAsync(nameof(DownloadPageAction), new { jobId = JobId, url, timeout, filename, result_name }, cancellationToken);
-
-        // WebClient is obsolete
-        // using WebClient client = new();
-        // client.Credentials = new NetworkCredential(ssrs_settings.UserName, ssrs_settings.Password);
-        // file.FileContent = await client.DownloadDataTaskAsync(url);
+        await DbLogHelper.LogDebugAsync(nameof(DownloadPageAction), new { jobId = JobId, url, timeout, filename, result_name }, cancellationToken);
 
         var handler = new HttpClientHandler();
         if (!string.IsNullOrEmpty(ssrs_settings.UserName) && !string.IsNullOrEmpty(ssrs_settings.Password))
@@ -93,7 +90,7 @@ public class SsrsExportReportAction : BaseAction
 
         response.EnsureSuccessStatusCode();
 
-         WJbFile file = new()
+        DbFile file = new()
         {
             FileName = filename,
             FileContent = await response.Content.ReadAsByteArrayAsync(cancellationToken)
@@ -106,7 +103,7 @@ public class SsrsExportReportAction : BaseAction
             More[result_name] = guid;
         }
 
-        await WJbLogHelper.LogInformationAsync(nameof(DownloadPageAction), new { jobId = JobId, result = "OK", guid }, cancellationToken);
+        await DbLogHelper.LogInformationAsync(nameof(DownloadPageAction), new { jobId = JobId, result = "OK", guid }, cancellationToken);
 
         return true;
     }

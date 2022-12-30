@@ -4,9 +4,9 @@
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
 using UkrGuru.WebJobs;
-using LogLevel = UkrGuru.Extensions.WJbLog.Level;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -22,13 +22,15 @@ public static class UkrGuruWebJobsExtensions
     /// <param name="connectionString"></param>
     /// <param name="logLevel"></param>
     /// <param name="nThreads"></param>
-    public static void AddWebJobs(this IServiceCollection services, string? connectionString = null, LogLevel logLevel = LogLevel.Debug, int nThreads = 4)
+    public static void AddWebJobs(this IServiceCollection services, string? connectionString = null, DbLogLevel logLevel = DbLogLevel.Information, int nThreads = 4)
     {
-        services.AddUkrGuruSqlJsonExt(connectionString, logLevel);
+        services.AddSqlJson(connectionString);
+
+        services.AddSqlJsonExt(logLevel);
 
         Assembly.GetExecutingAssembly().InitDb();
 
-        try { DbHelper.ExecProc($"WJbQueue_FinishAll"); } catch { }
+        try { DbHelper.Exec($"WJbQueue_FinishAll"); } catch { }
 
         if (nThreads > 0)
         {

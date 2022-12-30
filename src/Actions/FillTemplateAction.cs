@@ -3,6 +3,7 @@
 
 using System.Text.RegularExpressions;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Logging;
 
 namespace UkrGuru.WebJobs.Actions;
 
@@ -39,17 +40,17 @@ public class FillTemplateAction : BaseAction
             ArgumentNullException.ThrowIfNull(template);
 
             var vars = (from m in new Regex(tname_pattern).Matches(template) select m.Value).Distinct().ToArray();
-            
+
             foreach (var key in from key in vars where vals.ContainsKey(key) select key)
                 template = template.Replace(key, vals.GetValue(key));
 
-            await WJbLogHelper.LogDebugAsync(nameof(FillTemplateAction), 
+            await DbLogHelper.LogDebugAsync(nameof(FillTemplateAction),
                 new { jobId = JobId, tkey, template = ShortStr(template, 200) }, cancellationToken);
 
             More[$"next_{tkey}"] = template;
         }
 
-        await WJbLogHelper.LogInformationAsync(nameof(FillTemplateAction), new { jobId = JobId, result = "OK" }, cancellationToken);
+        await DbLogHelper.LogInformationAsync(nameof(FillTemplateAction), new { jobId = JobId, result = "OK" }, cancellationToken);
 
         return true;
     }

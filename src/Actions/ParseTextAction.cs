@@ -3,6 +3,7 @@
 
 using System.Text.Json;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Logging;
 using UkrGuru.WebJobs.Data;
 
 namespace UkrGuru.WebJobs.Actions;
@@ -28,14 +29,14 @@ public class ParseTextAction : BaseAction
         var result_name = More.GetValue("result_name") ?? "result";
         goals = goals.AppendRootNode(text);
 
-        for(int i = 0; i < goals.Length; i++)
+        for (int i = 0; i < goals.Length; i++)
         {
             goals[i].Value = goals.ParseValue(goals[i]);
         }
 
         More[result_name] = goals.GetResult();
 
-        await WJbLogHelper.LogInformationAsync(nameof(SendEmailAction), new { jobId = JobId, result = ShortStr(More.GetValue(result_name), 200) }, cancellationToken);
+        await DbLogHelper.LogInformationAsync(nameof(SendEmailAction), new { jobId = JobId, result = ShortStr(More.GetValue(result_name), 200) }, cancellationToken);
 
         return true;
     }

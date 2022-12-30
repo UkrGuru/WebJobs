@@ -2,6 +2,8 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Data;
+using UkrGuru.Extensions.Logging;
 
 namespace UkrGuru.WebJobs.Actions;
 
@@ -23,7 +25,7 @@ public class DownloadPageAction : BaseAction
 
         var result_name = More.GetValue("result_name") ?? "next_body";
 
-        await WJbLogHelper.LogDebugAsync(nameof(DownloadPageAction), new { jobId = JobId, url, filename, result_name }, cancellationToken);
+        await DbLogHelper.LogDebugAsync(nameof(DownloadPageAction), new { jobId = JobId, url, filename, result_name }, cancellationToken);
 
         var content = null as string;
 
@@ -31,9 +33,9 @@ public class DownloadPageAction : BaseAction
 
         content = await client.GetStringAsync(url, cancellationToken);
 
-        content = await WJbFileHelper.SetAsync(content, filename, false, cancellationToken);
+        content = await DbFileHelper.SetAsync(content, filename, false, cancellationToken);
 
-        await WJbLogHelper.LogInformationAsync(nameof(DownloadPageAction), new { jobId = JobId, result = "OK", content }, cancellationToken);
+        await DbLogHelper.LogInformationAsync(nameof(DownloadPageAction), new { jobId = JobId, result = "OK", content }, cancellationToken);
 
         if (!string.IsNullOrEmpty(result_name)) More[result_name] = content;
 

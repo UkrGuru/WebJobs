@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
 using UkrGuru.WebJobs.Data;
 
@@ -22,7 +23,7 @@ public class BaseAction
     /// 
     /// </summary>
     public int JobId { get; set; }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -76,13 +77,13 @@ public class BaseAction
         foreach (var more in More.Where(item => item.Key.StartsWith(next_prefix)))
             next_more.Add(more.Key[next_prefix.Length..], more.Value);
 
-        await WJbLogHelper.LogDebugAsync("NextAsync", new { jobId = JobId, next_rule, next_more }, cancellationToken);
+        await DbLogHelper.LogDebugAsync("NextAsync", new { jobId = JobId, next_rule, next_more }, cancellationToken);
 
-        var next_jobId = await DbHelper.FromProcAsync<int?>("WJbQueue_Ins",
+        var next_jobId = await DbHelper.ExecAsync<int?>("WJbQueue_Ins",
             new { Rule = next_rule, RulePriority = (byte)Priorities.ASAP, RuleMore = next_more },
             cancellationToken: cancellationToken);
 
-        await WJbLogHelper.LogInformationAsync("NextAsync", new { jobId = JobId, result = "OK", next_jobId }, cancellationToken);
+        await DbLogHelper.LogInformationAsync("NextAsync", new { jobId = JobId, result = "OK", next_jobId }, cancellationToken);
 
         return true;
     }

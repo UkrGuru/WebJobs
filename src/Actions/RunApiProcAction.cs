@@ -4,6 +4,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
 
 namespace UkrGuru.WebJobs.Actions;
@@ -41,7 +42,7 @@ public class RunApiProcAction : BaseAction
     {
         var api_settings_name = More.GetValue("api_settings_name").ThrowIfBlank("api_settings_name");
 
-        var api_settings = await DbHelper.FromProcAsync<ApiSettings>("WJbSettings_Get", api_settings_name, cancellationToken: cancellationToken);
+        var api_settings = await DbHelper.ExecAsync<ApiSettings>("WJbSettings_Get", api_settings_name, cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(api_settings);
 
         var url = api_settings.Url;
@@ -57,8 +58,15 @@ public class RunApiProcAction : BaseAction
         var result_name = More.GetValue("result_name");
         if (string.IsNullOrEmpty(result_name)) result_name = "next_data";
 
-        await WJbLogHelper.LogDebugAsync(nameof(RunApiProcAction), new { jobId = JobId, url = api_settings.Url, 
-            proc, data = ShortStr(data, 200), body = ShortStr(body, 200), result_name }, cancellationToken);
+        await DbLogHelper.LogDebugAsync(nameof(RunApiProcAction), new
+        {
+            jobId = JobId,
+            url = api_settings.Url,
+            proc,
+            data = ShortStr(data, 200),
+            body = ShortStr(body, 200),
+            result_name
+        }, cancellationToken);
 
         HttpMethod method = HttpMethod.Get;
         if (!string.IsNullOrEmpty(body))
@@ -89,7 +97,7 @@ public class RunApiProcAction : BaseAction
         if (responseBody != null && responseBody.StartsWith("Error:"))
             throw new Exception(responseBody.Replace("Error:", "").TrimStart());
 
-        await WJbLogHelper.LogInformationAsync(nameof(RunApiProcAction), new { jobId = JobId, result = ShortStr(responseBody, 200) }, cancellationToken);
+        await DbLogHelper.LogInformationAsync(nameof(RunApiProcAction), new { jobId = JobId, result = ShortStr(responseBody, 200) }, cancellationToken);
 
         if (!string.IsNullOrEmpty(result_name)) More[result_name] = responseBody;
 

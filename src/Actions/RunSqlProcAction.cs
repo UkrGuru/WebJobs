@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
 
 namespace UkrGuru.WebJobs.Actions;
@@ -26,19 +27,19 @@ public class RunSqlProcAction : BaseAction
 
         var result_name = More.GetValue("result_name");
 
-        await WJbLogHelper.LogDebugAsync(nameof(RunSqlProcAction), new { jobId = JobId, proc, data = ShortStr(data, 200), result_name, timeout }, cancellationToken);
+        await DbLogHelper.LogDebugAsync(nameof(RunSqlProcAction), new { jobId = JobId, proc, data = ShortStr(data, 200), result_name, timeout }, cancellationToken);
 
         if (string.IsNullOrEmpty(result_name))
         {
-            _ = await DbHelper.ExecProcAsync($"WJb_{proc}", data, timeout, cancellationToken);
+            _ = await DbHelper.ExecAsync($"WJb_{proc}", data, timeout, cancellationToken);
 
-            await WJbLogHelper.LogInformationAsync(nameof(RunSqlProcAction), new { jobId = JobId, result = "OK" }, cancellationToken);
+            await DbLogHelper.LogInformationAsync(nameof(RunSqlProcAction), new { jobId = JobId, result = "OK" }, cancellationToken);
         }
         else
         {
-            var result = await DbHelper.FromProcAsync<string?>($"WJb_{proc}", data, timeout, cancellationToken);
+            var result = await DbHelper.ExecAsync<string?>($"WJb_{proc}", data, timeout, cancellationToken);
 
-            await WJbLogHelper.LogInformationAsync(nameof(RunSqlProcAction), new { jobId = JobId, result = ShortStr(result, 200) }, cancellationToken);
+            await DbLogHelper.LogInformationAsync(nameof(RunSqlProcAction), new { jobId = JobId, result = ShortStr(result, 200) }, cancellationToken);
 
             More[result_name] = result;
         }
