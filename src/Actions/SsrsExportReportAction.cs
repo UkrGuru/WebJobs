@@ -72,7 +72,7 @@ public class SsrsExportReportAction : BaseAction
 
         if (!string.IsNullOrEmpty(data))
         {
-            url += $"&data={HttpUtility.UrlEncode(data)}";
+            url += $"&Data={HttpUtility.UrlEncode(data)}";
         }
 
         await DbLogHelper.LogDebugAsync(nameof(DownloadPageAction), new { jobId = JobId, url, timeout, filename, result_name }, cancellationToken);

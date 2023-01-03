@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 /// <summary>
 /// 
 /// </summary>
-public static class UkrGuruWebJobsExtensions
+public static class WebJobsServiceCollectionExtensions
 {
     /// <summary>
     /// 

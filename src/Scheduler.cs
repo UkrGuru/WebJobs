@@ -3,7 +3,6 @@
 
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using UkrGuru.Extensions;
 using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
 
