@@ -12,6 +12,6 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
-        Rules = await DbHelper.FromProcAsync<List<Rule>>("WJbRules_Grd_Demo");
+        Rules = await DbHelper.ExecAsync<List<Rule>>("WJbRules_Grd_Demo");
     }
 }

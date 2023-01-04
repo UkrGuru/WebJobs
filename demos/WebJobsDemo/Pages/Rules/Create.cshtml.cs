@@ -14,7 +14,7 @@ public class CreateModel : PageModel
     {
         Rule = new RuleInput();
 
-        var actions = await DbHelper.FromProcAsync<List<Action>>("WJbActions_Lst_Demo");
+        var actions = await DbHelper.ExecAsync<List<Action>>("WJbActions_Lst_Demo");
 
         ViewData["Actions"] = new SelectList(actions, "ActionId", "ActionName");
 
@@ -28,7 +28,7 @@ public class CreateModel : PageModel
     {
         if (!ModelState.IsValid) return Page();
 
-        await DbHelper.ExecProcAsync("WJbRules_Ins_Demo", Rule);
+        await DbHelper.ExecAsync("WJbRules_Ins_Demo", Rule);
 
         return RedirectToPage("./Index");
     }

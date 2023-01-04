@@ -12,6 +12,6 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
-        Actions = await DbHelper.FromProcAsync<List<Action>>("WJbActions_Grd_Demo");
+        Actions = await DbHelper.ExecAsync<List<Action>>("WJbActions_Grd_Demo");
     }
 }

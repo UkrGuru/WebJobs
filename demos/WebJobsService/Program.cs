@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Logging;
 
 namespace WebJobsService
 {
@@ -21,7 +22,7 @@ namespace WebJobsService
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddWebJobs(connectionString: hostContext.Configuration.GetConnectionString("SqlJsonConnection"),
-                        logLevel: hostContext.Configuration.GetValue<WJbLog.Level>("WJbSettings:LogLevel"),
+                        logLevel: hostContext.Configuration.GetValue<DbLogLevel>("WJbSettings:LogLevel"),
                         nThreads: hostContext.Configuration.GetValue<int>("WJbSettings:NThreads"));
                 });
     }

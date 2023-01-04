@@ -15,7 +15,7 @@ public class EditModel : PageModel
     {
         if (id == null) return NotFound();
 
-        Action = await DbHelper.FromProcAsync<ActionInput>("WJbActions_Get_Demo", id);
+        Action = await DbHelper.ExecAsync<ActionInput>("WJbActions_Get_Demo", id);
 
         if (Action.ActionId == 0) return NotFound();
 
@@ -26,7 +26,7 @@ public class EditModel : PageModel
     {
         if (!ModelState.IsValid) return Page();
 
-        await DbHelper.ExecProcAsync("WJbActions_Upd_Demo", Action);
+        await DbHelper.ExecAsync("WJbActions_Upd_Demo", Action);
 
         return RedirectToPage("./Index");
     }

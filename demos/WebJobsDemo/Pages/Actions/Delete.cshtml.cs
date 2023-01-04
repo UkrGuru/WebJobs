@@ -15,7 +15,7 @@ public class DeleteModel : PageModel
     {
         if (id == null) return NotFound();
 
-        Action = await DbHelper.FromProcAsync<ActionInput>("WJbActions_Get_Demo", id);
+        Action = await DbHelper.ExecAsync<ActionInput>("WJbActions_Get_Demo", id);
 
         if (Action.ActionId == 0) return NotFound();
 
@@ -26,7 +26,7 @@ public class DeleteModel : PageModel
     {
         if (id == null) return NotFound();
 
-        await DbHelper.ExecProcAsync("WJbActions_Del_Demo", id);
+        await DbHelper.ExecAsync("WJbActions_Del_Demo", id);
 
         return RedirectToPage("./Index");
     }

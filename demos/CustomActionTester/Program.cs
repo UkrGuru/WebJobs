@@ -6,6 +6,7 @@ using System.Text;
 using UkrGuru.SqlJson;
 using UkrGuru.WebJobs.Data;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Data;
 
 InitWebJobsDb("MyWebJobsTest");
 
@@ -13,11 +14,11 @@ Assembly.GetExecutingAssembly().InitDb();
 
 try
 {
-    var wjbFile = new WJbFile() { FileName = "1.txt", FileContent = Encoding.UTF8.GetBytes(new String('1', 4096)) };
+    var wjbFile = new DbFile() { FileName = "1.txt", FileContent = Encoding.UTF8.GetBytes(new String('1', 4096)) };
 
     var guidFile = await wjbFile.SetAsync();
 
-    var jobId = await DbHelper.FromProcAsync<int>("WJbQueue_Ins", new
+    var jobId = await DbHelper.ExecAsync<int>("WJbQueue_Ins", new
     {
         Rule = 2,
         RulePriority = (byte)Priorities.ASAP,
@@ -44,7 +45,7 @@ static bool InitWebJobsDb(string dbName)
 
     DbHelper.ConnectionString = connectionString.Replace(dbName, "master");
 
-    DbHelper.ExecCommand($"IF DB_ID('{dbName}') IS NULL CREATE DATABASE {dbName};");
+    DbHelper.Exec($"IF DB_ID('{dbName}') IS NULL CREATE DATABASE {dbName};");
 
     DbHelper.ConnectionString = connectionString;
 
@@ -63,7 +64,7 @@ static bool InitWebJobsDb(string dbName)
 
 static void TestJob(int jobId)
 {
-    var job = DbHelper.FromProc<JobQueue>("WJbQueue_Start", jobId.ToString());
+    var job = DbHelper.Exec<JobQueue>("WJbQueue_Start", jobId.ToString());
 
     if (job?.JobId > 0)
     {
@@ -86,7 +87,7 @@ static void TestJob(int jobId)
         }
         finally
         {
-            DbHelper.ExecProc("WJbQueue_Finish", new { JobId = jobId, JobStatus = result ? JobStatus.Completed : JobStatus.Failed });
+            DbHelper.Exec("WJbQueue_Finish", new { JobId = jobId, JobStatus = result ? JobStatus.Completed : JobStatus.Failed });
         }
     }
 }

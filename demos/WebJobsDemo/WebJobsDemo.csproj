@@ -19,15 +19,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Resources\3.5.0.0.sql" />
+    <None Remove="Resources\InitDb.sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\3.5.0.0.sql" />
+    <EmbeddedResource Include="Resources\InitDb.sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="UkrGuru.WebJobs" Version="3.7.8" />
+    <PackageReference Include="UkrGuru.WebJobs" Version="3.8.4" />
   </ItemGroup>
 
 </Project>

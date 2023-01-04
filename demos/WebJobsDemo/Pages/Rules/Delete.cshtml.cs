@@ -15,7 +15,7 @@ public class DeleteModel : PageModel
     {
         if (id == null) return NotFound();
 
-        Rule = await DbHelper.FromProcAsync<Rule>("WJbRules_Get_Demo", id);
+        Rule = await DbHelper.ExecAsync<Rule>("WJbRules_Get_Demo", id);
 
         if (Rule.RuleId == 0) return NotFound();
 
@@ -26,7 +26,7 @@ public class DeleteModel : PageModel
     {
         if (id == null) return NotFound();
 
-        await DbHelper.FromProcAsync<Rule>("WJbRules_Del_Demo", id);
+        await DbHelper.ExecAsync<Rule>("WJbRules_Del_Demo", id);
 
         return RedirectToPage("./Index");
     }

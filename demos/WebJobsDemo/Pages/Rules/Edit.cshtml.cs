@@ -17,11 +17,11 @@ public class EditModel : PageModel
     {
         if (id == null) return NotFound();
 
-        Rule = await DbHelper.FromProcAsync<RuleInput>("WJbRules_Get_Demo", id);
+        Rule = await DbHelper.ExecAsync<RuleInput>("WJbRules_Get_Demo", id);
 
         if (Rule.RuleId == 0) return NotFound();
 
-        var actions = await DbHelper.FromProcAsync<List<Action>>("WJbActions_Lst_Demo");
+        var actions = await DbHelper.ExecAsync<List<Action>>("WJbActions_Lst_Demo");
 
         ViewData["Actions"] = new SelectList(actions, "ActionId", "ActionName");
 
@@ -32,7 +32,7 @@ public class EditModel : PageModel
     {
         if (!ModelState.IsValid) return Page();
 
-        await DbHelper.ExecProcAsync("WJbRules_Upd_Demo", Rule);
+        await DbHelper.ExecAsync("WJbRules_Upd_Demo", Rule);
 
         return RedirectToPage("./Index");
     }

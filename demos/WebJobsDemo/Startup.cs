@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Logging;
 
 namespace WebJobsDemo;
 
@@ -20,7 +21,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddWebJobsDemo(connectionString: Configuration.GetConnectionString("SqlJsonConnection"),
-            logLevel: Configuration.GetValue<WJbLog.Level>("WJbSettings:LogLevel"),
+            logLevel: Configuration.GetValue<DbLogLevel>("Logging:LogLevel:UkrGuru.SqlJson"),
             nThreads: Configuration.GetValue<int>("WJbSettings:NThreads"));
 
         services.AddRazorPages();

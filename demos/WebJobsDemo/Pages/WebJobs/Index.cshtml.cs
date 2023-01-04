@@ -19,6 +19,6 @@ public class IndexModel : PageModel
 
         if (string.IsNullOrEmpty(Date)) Date = DateTime.Today.ToString("yyyy-MM-dd");
 
-        Jobs = await DbHelper.FromProcAsync<List<Job>>("WJbHistory_Grd_Demo", Date);
+        Jobs = await DbHelper.ExecAsync<List<Job>>("WJbHistory_Grd_Demo", Date);
     }
 }

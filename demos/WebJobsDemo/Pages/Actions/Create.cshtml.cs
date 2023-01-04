@@ -20,7 +20,7 @@ public class CreateModel : PageModel
     {
         if (!ModelState.IsValid) return Page();
 
-        await DbHelper.ExecProcAsync("WJbActions_Ins_Demo", Action);
+        await DbHelper.ExecAsync("WJbActions_Ins_Demo", Action);
 
         return RedirectToPage("./Index");
     }
