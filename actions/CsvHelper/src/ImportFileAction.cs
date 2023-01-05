@@ -5,6 +5,8 @@ using System.Globalization;
 using System.Text;
 using CsvHelper;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Data;
+using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
 using UkrGuru.WebJobs.Data;
 
@@ -21,17 +23,17 @@ public class ImportFileAction: BaseAction
         var file = More.GetValue("file");
         ArgumentNullException.ThrowIfNull(file);
 
-        await WJbLogHelper.LogDebugAsync(funcName, new { jobId, file }, cancellationToken);
+        await DbLogHelper.LogDebugAsync(funcName, new { jobId, file }, cancellationToken);
 
-        WJbFile wjbFile = null;
+        DbFile wjbFile = null;
 
         if (Guid.TryParse(file, out var guidFile))
-            wjbFile = await WJbFileHelper.GetAsync(guidFile, cancellationToken);
+            wjbFile = await DbFileHelper.GetAsync(guidFile, cancellationToken);
 
         ArgumentNullException.ThrowIfNull(wjbFile);
         ArgumentNullException.ThrowIfNull(wjbFile.FileContent);
 
-        await DbHelper.ExecProcAsync("WJbItems_Del_File", file, cancellationToken: cancellationToken);
+        await DbHelper.ExecAsync("WJbItems_Del_File", file, cancellationToken: cancellationToken);
 
         int count = 0;
         
@@ -44,12 +46,12 @@ public class ImportFileAction: BaseAction
             {
                 var record = csv.GetRecord<dynamic>();
 
-                await DbHelper.ExecProcAsync("WJbItems_Ins", new { FileId = file, ItemNo = i++, ItemMore = record }, cancellationToken: cancellationToken);
+                await DbHelper.ExecAsync("WJbItems_Ins", new { FileId = file, ItemNo = i++, ItemMore = record }, cancellationToken: cancellationToken);
             }
             count = i;
         }
 
-        await WJbLogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK", count }, cancellationToken);
+        await DbLogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK", count }, cancellationToken);
 
         return true;
     }

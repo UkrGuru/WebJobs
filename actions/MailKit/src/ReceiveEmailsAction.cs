@@ -6,6 +6,8 @@ using MimeKit;
 using System.Text;
 using System.Text.Json.Serialization;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Data;
+using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
 using UkrGuru.WebJobs.Data;
 
@@ -39,12 +41,12 @@ public class ReceiveEmailsAction : BaseAction
 
         var pop3_settings_name = More.GetValue("pop3_settings_name").ThrowIfBlank("pop3_settings_name");
 
-        var pop3_settings = await DbHelper.FromProcAsync<Pop3Settings>("WJbSettings_Get", pop3_settings_name, cancellationToken: cancellationToken);
+        var pop3_settings = await DbHelper.ExecAsync<Pop3Settings>("WJbSettings_Get", pop3_settings_name, cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(pop3_settings?.Host);
 
         var proc_rule = More.GetValue("proc_rule");
 
-        await WJbLogHelper.LogDebugAsync(funcName, new { jobId, pop3_settings_name, proc_rule }, cancellationToken);
+        await DbLogHelper.LogDebugAsync(funcName, new { jobId, pop3_settings_name, proc_rule }, cancellationToken);
 
         using (var client = new Pop3Client())
         {
@@ -58,7 +60,7 @@ public class ReceiveEmailsAction : BaseAction
 
                 var message = await client.GetMessageAsync(i, cancellationToken: cancellationToken);
 
-                var fileBody = new WJbFile()
+                var fileBody = new DbFile()
                 {
                     FileName = GetLocalFileName(message.HtmlBody == null ? "body.txt" : "body.html"),
                     FileContent = Encoding.UTF8.GetBytes(message.TextBody ?? message.HtmlBody)
@@ -66,7 +68,7 @@ public class ReceiveEmailsAction : BaseAction
 
                 var guidBody = await fileBody.SetAsync(cancellationToken);
 
-                await WJbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Added Email Body: {guidBody}." });
+                await DbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Added Email Body: {guidBody}." });
 
                 var attachments = new List<string>();
                 foreach (var attachment in message.Attachments)
@@ -76,19 +78,19 @@ public class ReceiveEmailsAction : BaseAction
                         var ms = new MemoryStream();
                         await part.Content.DecodeToAsync(ms, cancellationToken: cancellationToken);
 
-                        var file = new WJbFile() { FileName = GetLocalFileName(part.FileName), FileContent = ms.ToArray() };
+                        var file = new DbFile() { FileName = GetLocalFileName(part.FileName), FileContent = ms.ToArray() };
 
                         var fileId = await file.SetAsync(cancellationToken);
 
                         attachments.Add(fileId);
 
-                        await WJbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Added Email Attachment: {fileId}." });
+                        await DbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Added Email Attachment: {fileId}." });
                     }
                 }
 
                 if (!string.IsNullOrEmpty(proc_rule))
                 {
-                    var email_jobId = await DbHelper.FromProcAsync<int?>("WJbQueue_Ins", new
+                    var email_jobId = await DbHelper.ExecAsync<int?>("WJbQueue_Ins", new
                     {
                         Rule = proc_rule,
                         RulePriority = (byte)Priorities.ASAP,
@@ -102,7 +104,7 @@ public class ReceiveEmailsAction : BaseAction
                         }
                     }, cancellationToken: cancellationToken);
 
-                    await WJbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Added Email Job: {email_jobId}." });
+                    await DbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Added Email Job: {email_jobId}." });
                 }
 
                 await client.DeleteMessageAsync(i, cancellationToken: cancellationToken);
@@ -111,7 +113,7 @@ public class ReceiveEmailsAction : BaseAction
             await client.DisconnectAsync(true, cancellationToken: cancellationToken);
         }
 
-        await WJbLogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK" }, cancellationToken);
+        await DbLogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK" }, cancellationToken);
 
         return true;
     }

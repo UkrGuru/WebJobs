@@ -1,5 +1,7 @@
 ﻿using ClosedXML.Excel;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Data;
+using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
 
 namespace UkrGuru.WebJobs.Actions.ClosedXML;
@@ -14,23 +16,23 @@ public class ImportFileAction : BaseAction
 
         var file = More.GetValue("file").ThrowIfBlank("file");
 
-        await WJbLogHelper.LogDebugAsync(funcName, new { jobId, file }, cancellationToken);
+        await DbLogHelper.LogDebugAsync(funcName, new { jobId, file }, cancellationToken);
 
-        count = await DbHelper.ExecProcAsync("WJbItems_Del_File", file, cancellationToken: cancellationToken);
+        count = await DbHelper.ExecAsync("WJbItems_Del_File", file, cancellationToken: cancellationToken);
 
-        await WJbLogHelper.LogInformationAsync(funcName, new { jobId, proc = "WJbItems_Del_File", file, result = "OK", count }, cancellationToken);
+        await DbLogHelper.LogInformationAsync(funcName, new { jobId, proc = "WJbItems_Del_File", file, result = "OK", count }, cancellationToken);
 
-        WJbFile wjbFile = null;
+        DbFile dbFile = null;
 
         if (Guid.TryParse(file, out var guidFile))
-            wjbFile = await WJbFileHelper.GetAsync(guidFile, cancellationToken);
+            dbFile = await DbFileHelper.GetAsync(guidFile, cancellationToken);
 
-        ArgumentNullException.ThrowIfNull(wjbFile);
-        ArgumentNullException.ThrowIfNull(wjbFile.FileContent);
+        ArgumentNullException.ThrowIfNull(dbFile);
+        ArgumentNullException.ThrowIfNull(dbFile.FileContent);
 
         count = 0;
 
-        using (var stream = new MemoryStream(wjbFile.FileContent))
+        using (var stream = new MemoryStream(dbFile.FileContent))
         using (var wbook = new XLWorkbook(stream))
         {
             var ws1 = wbook.Worksheet(1);
@@ -48,13 +50,13 @@ public class ImportFileAction : BaseAction
                 else
                 {
                     dict.Fill(row, head);
-                    await DbHelper.ExecProcAsync("WJbItems_Ins", new { FileId = file, ItemNo = r, ItemMore = dict }, cancellationToken: cancellationToken);
+                    await DbHelper.ExecAsync("WJbItems_Ins", new { FileId = file, ItemNo = r, ItemMore = dict }, cancellationToken: cancellationToken);
                 }
                 r++;
             }
         };
 
-        await WJbLogHelper.LogInformationAsync(funcName, new { jobId, proc = "WJbItems_Ins", file, result = "OK", count }, cancellationToken);
+        await DbLogHelper.LogInformationAsync(funcName, new { jobId, proc = "WJbItems_Ins", file, result = "OK", count }, cancellationToken);
 
         return true;
     }

@@ -4,6 +4,7 @@ using Xunit;
 using System.Text;
 using UkrGuru.WebJobs.Data;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Data;
 
 namespace SshNetTests;
 
@@ -19,7 +20,7 @@ public class SshNetTests
 
         DbHelper.ConnectionString = connectionString.Replace(dbName, "master");
 
-        DbHelper.ExecCommand($"IF DB_ID('{dbName}') IS NULL CREATE DATABASE {dbName};");
+        DbHelper.Exec($"IF DB_ID('{dbName}') IS NULL CREATE DATABASE {dbName};");
 
         DbHelper.ConnectionString = connectionString;
 
@@ -47,13 +48,13 @@ public class SshNetTests
     [Fact]
     public async Task SshNetTest()
     {
-        var wjbFile = new WJbFile() { FileName = "1.txt", FileContent = Encoding.UTF8.GetBytes(new String('1', 4096)) };
+        var dbFile = new DbFile() { FileName = "1.txt", FileContent = Encoding.UTF8.GetBytes(new String('1', 4096)) };
 
-        var guidFile = await wjbFile.SetAsync();
+        var guidFile = await dbFile.SetAsync();
 
         Assert.NotNull(guidFile);
 
-        var jobId = await DbHelper.FromProcAsync<int>("WJbQueue_Ins", new
+        var jobId = await DbHelper.ExecAsync<int>("WJbQueue_Ins", new
         {
             Rule = 21,
             RulePriority = (byte)Priorities.ASAP,
@@ -73,14 +74,14 @@ public class SshNetTests
 
     static void TestRule(int ruleId)
     {
-        var jobId = DbHelper.FromProc<int>("WJbRules_Test", ruleId);
+        var jobId = DbHelper.Exec<int>("WJbRules_Test", ruleId);
 
         TestJob(jobId);
     }
 
     static void TestJob(int jobId)
     {
-        var job = DbHelper.FromProc<JobQueue>("WJbQueue_Start", jobId.ToString());
+        var job = DbHelper.Exec<JobQueue>("WJbQueue_Start", jobId.ToString());
 
         if (job?.JobId > 0)
         {
@@ -103,7 +104,7 @@ public class SshNetTests
             }
             finally
             {
-                DbHelper.ExecProcAsync("WJbQueue_Finish", new { JobId = jobId, JobStatus = result ? JobStatus.Completed : JobStatus.Failed }).Wait();
+                DbHelper.ExecAsync("WJbQueue_Finish", new { JobId = jobId, JobStatus = result ? JobStatus.Completed : JobStatus.Failed }).Wait();
             }
         }
     }

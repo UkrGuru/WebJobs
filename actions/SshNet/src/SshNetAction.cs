@@ -38,7 +38,7 @@ public class SshNetAction : BaseAction
     {
         SftpClient sftp = null;
 
-        var sshnet_settings = await DbHelper.FromProcAsync<SshNetSettings>("WJbSettings_Get", sshnet_settings_name.ThrowIfBlank("sshnet_settings_name"), cancellationToken: cancellationToken);
+        var sshnet_settings = await DbHelper.ExecAsync<SshNetSettings>("WJbSettings_Get", sshnet_settings_name.ThrowIfBlank("sshnet_settings_name"), cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(sshnet_settings);
 
         if (sshnet_settings.KeyFiles?.Length > 0)

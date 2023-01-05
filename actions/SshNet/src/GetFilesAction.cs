@@ -2,6 +2,8 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Data;
+using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
 using UkrGuru.WebJobs.Data;
 
@@ -22,7 +24,7 @@ public class GetFilesAction : SshNetAction
 
         var proc_rule = More.GetValue("proc_rule"); 
         
-        await WJbLogHelper.LogDebugAsync(funcName, new { jobId, sshnet_settings_name, remote_path, proc_rule }, cancellationToken);
+        await DbLogHelper.LogDebugAsync(funcName, new { jobId, sshnet_settings_name, remote_path, proc_rule }, cancellationToken);
 
         using var sftp = await CreateSftpClient(sshnet_settings_name, cancellationToken);
         {
@@ -38,33 +40,33 @@ public class GetFilesAction : SshNetAction
 
                 try
                 {
-                    var wjbFile = new WJbFile() { FileName = GetLocalFileName(sftpFile.Name) };
+                    var dbFile = new DbFile() { FileName = GetLocalFileName(sftpFile.Name) };
                     
-                    wjbFile.FileContent = await sftp.ReadAllBytesAsync(remoteFullName, cancellationToken);
+                    dbFile.FileContent = await sftp.ReadAllBytesAsync(remoteFullName, cancellationToken);
 
-                    var guidFile = await wjbFile.SetAsync(cancellationToken);
+                    var guidFile = await dbFile.SetAsync(cancellationToken);
 
-                    await WJbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Saved File: {guidFile}." });
+                    await DbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Saved File: {guidFile}." });
 
                     if (!string.IsNullOrEmpty(proc_rule) && !string.IsNullOrEmpty(guidFile))
                     {
-                        var proc_jobId = await DbHelper.FromProcAsync<int?>("WJbQueue_Ins", new
+                        var proc_jobId = await DbHelper.ExecAsync<int?>("WJbQueue_Ins", new
                         {
                             Rule = proc_rule,
                             RulePriority = (byte)Priorities.ASAP,
                             RuleMore = new { file = guidFile }
                         }, cancellationToken: cancellationToken);
 
-                        await WJbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Created Proc Job: {proc_jobId}." });
+                        await DbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Created Proc Job: {proc_jobId}." });
                     }
 
                     await sftp.DeleteFileAsync(remoteFullName, cancellationToken);
 
-                    await WJbLogHelper.LogInformationAsync(funcName, new { jobId, errMsg = $"Downloaded: {remoteFullName}." }, cancellationToken);
+                    await DbLogHelper.LogInformationAsync(funcName, new { jobId, errMsg = $"Downloaded: {remoteFullName}." }, cancellationToken);
                 }
                 catch (Exception ex)
                 {
-                    await WJbLogHelper.LogErrorAsync(funcName, new { jobId, errMsg = $"Failed: {remoteFullName}. Error: {ex.Message}." }, cancellationToken);
+                    await DbLogHelper.LogErrorAsync(funcName, new { jobId, errMsg = $"Failed: {remoteFullName}. Error: {ex.Message}." }, cancellationToken);
                     throw;
                 }
             }
@@ -72,7 +74,7 @@ public class GetFilesAction : SshNetAction
             sftp.Disconnect();
         }
 
-        await WJbLogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK" }, cancellationToken);
+        await DbLogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK" }, cancellationToken);
 
         return true;
     }

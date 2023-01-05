@@ -9,7 +9,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <AssemblyName>UkrGuru.WebJobs.Actions.CsvHelper</AssemblyName>
     <RootNamespace>UkrGuru.WebJobs.Actions.CsvHelper</RootNamespace>
-    <Version>3.7.4</Version>
+    <Version>3.8.4</Version>
     <Description>UkrGuru.WebJobs.Actions.CsvHelper is additional actions for UkrGuru.WebJobs package. 
 Created on base CsvHelper package for processing files in CSV format.</Description>
     <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
@@ -33,7 +33,7 @@ Created on base CsvHelper package for processing files in CSV format.</Descripti
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="30.0.1" />
-    <PackageReference Include="UkrGuru.WebJobs" Version="3.7.8" />
+    <PackageReference Include="UkrGuru.WebJobs" Version="3.8.4" />
   </ItemGroup>
 
 

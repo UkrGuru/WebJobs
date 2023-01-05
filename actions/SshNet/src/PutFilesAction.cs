@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Logging;
 using UkrGuru.WebJobs.Data;
 
 namespace UkrGuru.WebJobs.Actions.SshNet;
@@ -21,7 +22,7 @@ public class PutFilesAction : SshNetAction
         var files = More.GetValue("files", (object[])null);
         ArgumentNullException.ThrowIfNull(files);
 
-        await WJbLogHelper.LogDebugAsync(funcName, new { jobId, sshnet_settings_name, remote_path, files }, cancellationToken);
+        await DbLogHelper.LogDebugAsync(funcName, new { jobId, sshnet_settings_name, remote_path, files }, cancellationToken);
 
         using var sftp = await CreateSftpClient(sshnet_settings_name, cancellationToken);
         {
@@ -37,11 +38,11 @@ public class PutFilesAction : SshNetAction
 
                     await sftp.UploadFileAsync(remote_path, file, cancellationToken);
 
-                    await WJbLogHelper.LogInformationAsync(funcName, new { jobId, errMsg = $"Uploaded: {file}." }, cancellationToken);
+                    await DbLogHelper.LogInformationAsync(funcName, new { jobId, errMsg = $"Uploaded: {file}." }, cancellationToken);
                 }
                 catch (Exception ex)
                 {
-                    await WJbLogHelper.LogErrorAsync(funcName, new { jobId, errMsg = $"Failed: {file}. Error: {ex.Message}." }, cancellationToken);
+                    await DbLogHelper.LogErrorAsync(funcName, new { jobId, errMsg = $"Failed: {file}. Error: {ex.Message}." }, cancellationToken);
                     throw;
                 }
             }
@@ -49,7 +50,7 @@ public class PutFilesAction : SshNetAction
             sftp.Disconnect();
         }
 
-        await WJbLogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK" }, cancellationToken);
+        await DbLogHelper.LogInformationAsync(funcName, new { jobId = JobId, result = "OK" }, cancellationToken);
 
         return true;
     }

@@ -4,6 +4,7 @@
 using Renci.SshNet;
 using Renci.SshNet.Sftp;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Data;
 
 namespace UkrGuru.WebJobs.Actions.SshNet;
 
@@ -33,13 +34,13 @@ public static class SftpClientExtensions
     {
         if (Guid.TryParse(guid, out var guidFile))
         {
-            var wjbFile = await WJbFileHelper.GetAsync(guidFile, cancellationToken);
+            var dbFile = await DbFileHelper.GetAsync(guidFile, cancellationToken);
 
-            if (wjbFile?.FileContent != null)
+            if (dbFile?.FileContent != null)
             {
-                var remoteFullName = SshNetAction.CombinateRemoteFullName(path, wjbFile.FileName);
+                var remoteFullName = SshNetAction.CombinateRemoteFullName(path, dbFile.FileName);
 
-                await sftp.WriteAllBytesAsync(remoteFullName, wjbFile.FileContent, cancellationToken);
+                await sftp.WriteAllBytesAsync(remoteFullName, dbFile.FileContent, cancellationToken);
 
                 return true;
             }

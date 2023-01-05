@@ -4,7 +4,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <AssemblyName>UkrGuru.WebJobs.Actions.MailKit</AssemblyName>
         <RootNamespace>UkrGuru.WebJobs.Actions.MailKit</RootNamespace>
-        <Version>3.7.4</Version>
+        <Version>3.8.4</Version>
         <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
         <RepositoryUrl>https://github.com/UkrGuru/WebJobs/tree/main/actions/MailKit</RepositoryUrl>
         <PackageTags>pop3 email net6 mailkit</PackageTags>
@@ -55,7 +55,7 @@
 
     <ItemGroup>
         <PackageReference Include="MailKit" Version="3.4.3" />
-        <PackageReference Include="UkrGuru.WebJobs" Version="3.7.8" />
+        <PackageReference Include="UkrGuru.WebJobs" Version="3.8.4" />
     </ItemGroup>
 
 </Project>

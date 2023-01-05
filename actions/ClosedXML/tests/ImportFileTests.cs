@@ -1,9 +1,9 @@
 using System.Reflection;
 using UkrGuru.SqlJson;
-using Data = UkrGuru.WebJobs.Data;
 using UkrGuru.WebJobs.Data;
 using Xunit;
 using UkrGuru.Extensions;
+using UkrGuru.Extensions.Data;
 
 namespace ClosedXMLTests
 {
@@ -19,7 +19,7 @@ namespace ClosedXMLTests
 
             DbHelper.ConnectionString = connectionString.Replace(dbName, "master");
 
-            DbHelper.ExecCommand($"IF DB_ID('{dbName}') IS NULL CREATE DATABASE {dbName};");
+            DbHelper.Exec($"IF DB_ID('{dbName}') IS NULL CREATE DATABASE {dbName};");
 
             DbHelper.ConnectionString = connectionString;
 
@@ -49,13 +49,13 @@ namespace ClosedXMLTests
         {
             var bytes = await System.IO.File.ReadAllBytesAsync("data.xlsx");
 
-            var wjbFile = new WJbFile() { FileName = "customers.csv", FileContent = bytes };
+            var wjbFile = new DbFile() { FileName = "customers.csv", FileContent = bytes };
 
             var guidFile = await wjbFile.SetAsync();
 
             Assert.NotNull(guidFile);
 
-            var jobId = await DbHelper.FromProcAsync<int>("WJbQueue_Ins", new
+            var jobId = await DbHelper.ExecAsync<int>("WJbQueue_Ins", new
             {
                 Rule = 50,  /* Import Xlsx File */
                 RulePriority = (byte)Priorities.ASAP,
@@ -69,14 +69,14 @@ namespace ClosedXMLTests
 
         static void TestRule(int ruleId)
         {
-            var jobId = DbHelper.FromProc<int>("WJbRules_Test", ruleId);
+            var jobId = DbHelper.Exec<int>("WJbRules_Test", ruleId);
 
             TestJob(jobId);
         }
 
         static void TestJob(int jobId)
         {
-            var job = DbHelper.FromProc<JobQueue>("WJbQueue_Start", jobId.ToString());
+            var job = DbHelper.Exec<JobQueue>("WJbQueue_Start", jobId.ToString());
 
             if (job?.JobId > 0)
             {
@@ -99,7 +99,7 @@ namespace ClosedXMLTests
                 }
                 finally
                 {
-                    DbHelper.ExecProc("WJbQueue_Finish", new { JobId = jobId, JobStatus = result ? JobStatus.Completed : JobStatus.Failed });
+                    DbHelper.Exec("WJbQueue_Finish", new { JobId = jobId, JobStatus = result ? JobStatus.Completed : JobStatus.Failed });
                 }
             }
         }
