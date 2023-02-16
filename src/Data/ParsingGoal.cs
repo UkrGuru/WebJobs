@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// Copyright (c) Oleksandr Viktor (UkrGuru). All rights reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace UkrGuru.WebJobs.Data;

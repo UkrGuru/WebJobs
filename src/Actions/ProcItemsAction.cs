@@ -53,7 +53,9 @@ public class ProcItemsAction : BaseAction
                     new { FileId = fileId, ItemNo = i, Result = result }, timeout, cancellationToken: cancellationToken);
             }
 
-            if (itemNo != null) break; else i++;
+            if (itemNo != null) break; 
+            
+            i++;
         }
 
         await DbLogHelper.LogInformationAsync(nameof(ProcItemsAction),

@@ -2,8 +2,6 @@
 using UkrGuru.SqlJson;
 using UkrGuru.WebJobs.Data;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using System.Threading;
 using System.Text.Json;
 using WebJobsTests.Extensions;
 using UkrGuru.Extensions;
@@ -147,7 +145,7 @@ public class WebJobsTest
     public async Task DownloadPageActionTest()
     {
         Job job = new() { ActionType = "DownloadPageAction, UkrGuru.WebJobs" };
-        job.JobMore = @"{ ""url"": ""https://ukrguru.com/"", ""result_name"": ""next_body"" }";
+        job.JobMore = @"{ ""url"": ""https://www.ukrguru.com/"", ""result_name"": ""next_body"" }";
 
         bool result = false; 
 

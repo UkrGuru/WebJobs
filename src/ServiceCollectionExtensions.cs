@@ -22,15 +22,16 @@ public static class WebJobsServiceCollectionExtensions
     /// <param name="connectionString"></param>
     /// <param name="logLevel"></param>
     /// <param name="nThreads"></param>
-    public static void AddWebJobs(this IServiceCollection services, string? connectionString = null, DbLogLevel logLevel = DbLogLevel.Information, int nThreads = 4)
+    /// <param name="initDb"></param>
+    public static void AddWebJobs(this IServiceCollection services, string? connectionString = null, DbLogLevel logLevel = DbLogLevel.Information, int nThreads = 4, bool initDb = true)
     {
         services.AddSqlJson(connectionString);
 
-        services.AddSqlJsonExt(logLevel);
+        services.AddSqlJsonExt(logLevel, initDb);
 
-        Assembly.GetExecutingAssembly().InitDb();
+        if (initDb) Assembly.GetExecutingAssembly().InitDb();
 
-        try { DbHelper.Exec($"WJbQueue_FinishAll"); } catch { }
+        try { DbHelper.Exec("WJbQueue_FinishAll"); } catch { }
 
         if (nThreads > 0)
         {

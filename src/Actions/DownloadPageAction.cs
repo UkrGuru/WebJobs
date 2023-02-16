@@ -33,7 +33,7 @@ public class DownloadPageAction : BaseAction
 
         content = await client.GetStringAsync(url, cancellationToken);
 
-        content = await DbFileHelper.SetAsync(content, filename, false, cancellationToken);
+        content = await DbFileHelper.SetAsync(content, filename, false, cancellationToken: cancellationToken);
 
         await DbLogHelper.LogInformationAsync(nameof(DownloadPageAction), new { jobId = JobId, result = "OK", content }, cancellationToken);
 

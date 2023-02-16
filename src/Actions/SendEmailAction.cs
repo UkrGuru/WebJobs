@@ -100,7 +100,7 @@ public class SendEmailAction : BaseAction
         }, cancellationToken);
 
         if (Guid.TryParse(body, out var guidBody))
-            body = await DbFileHelper.GetAsync(body, cancellationToken);
+            body = await DbFileHelper.GetAsync(body, cancellationToken: cancellationToken);
 
         MailMessage message = new(from, to, subject, body)
         {
@@ -120,7 +120,7 @@ public class SendEmailAction : BaseAction
 
                 if (Guid.TryParse(attachment, out var guidAttach))
                 {
-                    var file = await DbFileHelper.GetAsync(guidAttach, cancellationToken);
+                    var file = await DbFileHelper.GetAsync(guidAttach, cancellationToken: cancellationToken);
                     ArgumentNullException.ThrowIfNull(file);
                     ArgumentNullException.ThrowIfNull(file?.FileContent);
 
