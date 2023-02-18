@@ -587,7 +587,7 @@ DECLARE @RuleId int = CASE WHEN ISNUMERIC(JSON_VALUE(@Data, ''$.Rule'')) = 1 THE
 INSERT INTO WJbQueue (RuleId, JobPriority, JobMore, JobStatus)
 SELECT @RuleId, JSON_VALUE(@Data, ''$.RulePriority''), JSON_QUERY(@Data, ''$.RuleMore''), 1 /* Queued */
 
-SELECT CAST(SCOPE_IDENTITY() AS varchar) Id
+SELECT SCOPE_IDENTITY()
 ';
 EXEC dbo.sp_executesql @statement = N'
 CREATE OR ALTER PROCEDURE [WJbQueue_InsCron]
