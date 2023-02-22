@@ -34,7 +34,7 @@ public static class SftpClientExtensions
     {
         if (Guid.TryParse(guid, out var guidFile))
         {
-            var dbFile = await DbFileHelper.GetAsync(guidFile, cancellationToken);
+            var dbFile = await DbFileHelper.GetAsync(guidFile, cancellationToken: cancellationToken);
 
             if (dbFile?.FileContent != null)
             {

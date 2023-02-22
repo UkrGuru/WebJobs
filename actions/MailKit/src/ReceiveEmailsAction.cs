@@ -66,7 +66,7 @@ public class ReceiveEmailsAction : BaseAction
                     FileContent = Encoding.UTF8.GetBytes(message.TextBody ?? message.HtmlBody)
                 };
 
-                var guidBody = await fileBody.SetAsync(cancellationToken);
+                var guidBody = await fileBody.SetAsync(cancellationToken: cancellationToken);
 
                 await DbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Added Email Body: {guidBody}." });
 
@@ -80,7 +80,7 @@ public class ReceiveEmailsAction : BaseAction
 
                         var file = new DbFile() { FileName = GetLocalFileName(part.FileName), FileContent = ms.ToArray() };
 
-                        var fileId = await file.SetAsync(cancellationToken);
+                        var fileId = await file.SetAsync(cancellationToken: cancellationToken);
 
                         attachments.Add(fileId);
 

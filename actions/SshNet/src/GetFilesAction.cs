@@ -44,7 +44,7 @@ public class GetFilesAction : SshNetAction
                     
                     dbFile.FileContent = await sftp.ReadAllBytesAsync(remoteFullName, cancellationToken);
 
-                    var guidFile = await dbFile.SetAsync(cancellationToken);
+                    var guidFile = await dbFile.SetAsync(cancellationToken: cancellationToken);
 
                     await DbLogHelper.LogInformationAsync(funcName, new { jobId, result = $"Saved File: {guidFile}." });
 

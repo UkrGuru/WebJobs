@@ -28,7 +28,7 @@ public class ImportFileAction: BaseAction
         DbFile wjbFile = null;
 
         if (Guid.TryParse(file, out var guidFile))
-            wjbFile = await DbFileHelper.GetAsync(guidFile, cancellationToken);
+            wjbFile = await DbFileHelper.GetAsync(guidFile, cancellationToken: cancellationToken);
 
         ArgumentNullException.ThrowIfNull(wjbFile);
         ArgumentNullException.ThrowIfNull(wjbFile.FileContent);
