@@ -17,7 +17,7 @@ public class Worker : BackgroundService
     private const int NO_DELAY = 0;
     private const int MIN_DELAY = 100;
     private const int ADD_DELAY = 1000;
-    private const int MAX_DELAY = MIN_DELAY * 16;
+    private const int MAX_DELAY = MIN_DELAY * 32;
 
     private int _delay = MIN_DELAY;
 

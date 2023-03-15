@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 /// <summary>
 /// 
 /// </summary>
-public static class WebJobsServiceCollectionExtensions
+public static class WJbServiceCollectionExtensions
 {
     /// <summary>
     /// 
@@ -29,6 +29,17 @@ public static class WebJobsServiceCollectionExtensions
 
         services.AddSqlJsonExt(logLevel, initDb);
 
+        services.AddWebJobs(nThreads, initDb);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="nThreads"></param>
+    /// <param name="initDb"></param>
+    public static void AddWebJobs(this IServiceCollection services, int nThreads = 4, bool initDb = true)
+    {
         if (initDb) Assembly.GetExecutingAssembly().InitDb();
 
         try { DbHelper.Exec("WJbQueue_FinishAll"); } catch { }
