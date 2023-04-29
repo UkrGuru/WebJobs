@@ -3,7 +3,6 @@
 
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
 
 namespace UkrGuru.WebJobs;
@@ -12,6 +11,9 @@ namespace UkrGuru.WebJobs;
 /// </summary>
 public class Scheduler : BackgroundService
 {
+    /// <summary>
+    /// 
+    /// </summary>
     private readonly ILogger<Scheduler> _logger;
 
     /// <summary>
@@ -27,11 +29,11 @@ public class Scheduler : BackgroundService
     /// <returns></returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await DbHelper.ExecAsync("DECLARE @Delay varchar(10) = '00:00:' + FORMAT(60 - DATEPART(SECOND, GETDATE()), '00'); WAITFOR DELAY @Delay;", timeout: 100);
+        await WaitForNewMinute();
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            _ = Task.Run(async () => await CreateCronJobs(stoppingToken));
+            await Task.Run(async () => await CreateCronJobs(stoppingToken), cancellationToken: stoppingToken);
 
             await Task.Delay(TimeSpan.FromSeconds(60), stoppingToken);
         }
@@ -51,7 +53,22 @@ public class Scheduler : BackgroundService
         catch (Exception ex)
         {
             _logger.LogError(ex, "CreateCronJobs Error", nameof(CreateCronJobs));
-            await DbLogHelper.LogErrorAsync("CreateCronJobs Error", new { errMsg = ex.Message }, stoppingToken);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    private async Task WaitForNewMinute()
+    {
+        try
+        {
+            await DbHelper.ExecAsync("DECLARE @Delay varchar(10) = '00:00:' + FORMAT(60 - DATEPART(SECOND, GETDATE()), '00'); WAITFOR DELAY @Delay;", timeout: 100);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "WaitForMinuteEnd Error", nameof(WaitForNewMinute));
         }
     }
 }

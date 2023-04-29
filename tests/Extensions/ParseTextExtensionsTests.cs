@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using UkrGuru.WebJobs.Data;
 using System.Linq;
+using static UkrGuru.WebJobs.Data.ParsingGoalExtensions;
 
 namespace WebJobsTests.Extensions;
 

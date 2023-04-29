@@ -96,7 +96,7 @@ public class SsrsExportReportAction : BaseAction
             FileContent = await response.Content.ReadAsByteArrayAsync(cancellationToken)
         };
 
-        var guid = await file.SetAsync(cancellationToken: cancellationToken);
+        var guid = await file.SetAsync<Guid?>(cancellationToken: cancellationToken);
 
         if (!string.IsNullOrEmpty(result_name))
         {

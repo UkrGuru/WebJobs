@@ -17,7 +17,7 @@ public class Worker : BackgroundService
     private const int NO_DELAY = 0;
     private const int MIN_DELAY = 100;
     private const int ADD_DELAY = 1000;
-    private const int MAX_DELAY = MIN_DELAY * 32;
+    private const int MAX_DELAY = 20000;
 
     private int _delay = MIN_DELAY;
 
@@ -79,7 +79,6 @@ public class Worker : BackgroundService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Worker.ExecuteAsync Error", nameof(ExecuteAsync));
-                await DbLogHelper.LogErrorAsync("Worker.ExecuteAsync Error", new { errMsg = ex.Message }, stoppingToken);
             }
 
             if (_delay > 0) 

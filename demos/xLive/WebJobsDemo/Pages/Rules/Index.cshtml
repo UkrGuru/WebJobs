@@ -1,0 +1,73 @@
+﻿@page
+@model WebJobsDemo.Pages.Rules.IndexModel
+
+@{
+    ViewData["Title"] = "Rules";
+}
+
+<h1>Rules</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Rules[0].RuleId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rules[0].RuleName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rules[0].RulePriority)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rules[0].ActionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rules[0].RuleMore)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rules[0].Disabled)
+            </th>
+            <th>
+
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Rules)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RuleId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RuleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RulePriority)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActionName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RuleMore)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Disabled)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.RuleId">Edit</a>
+            </td>
+            <td>
+                <a asp-page="./Delete" asp-route-id="@item.RuleId">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

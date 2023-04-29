@@ -1,0 +1,55 @@
+﻿@page
+@model WebJobsDemo.Pages.Actions.IndexModel
+
+@{
+    ViewData["Title"] = "Actions";
+}
+
+<h1>Actions</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Actions[0].ActionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Actions[0].ActionType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Actions[0].ActionMore)
+            </th>
+            <th>
+
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Actions)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActionName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActionType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActionMore)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.ActionId">Edit</a>
+            </td>
+            <td>
+                <a asp-page="./Delete" asp-route-id="@item.ActionId">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

@@ -5,6 +5,7 @@ using System.Text.Json;
 using UkrGuru.Extensions;
 using UkrGuru.Extensions.Logging;
 using UkrGuru.WebJobs.Data;
+using static UkrGuru.WebJobs.Data.ParsingGoalExtensions;
 
 namespace UkrGuru.WebJobs.Actions;
 
@@ -13,6 +14,8 @@ namespace UkrGuru.WebJobs.Actions;
 /// </summary>
 public class ParseTextAction : BaseAction
 {
+
+
     /// <summary>
     /// 
     /// </summary>

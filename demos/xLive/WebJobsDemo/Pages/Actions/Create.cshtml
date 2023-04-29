@@ -1,0 +1,44 @@
+﻿@page
+@model WebJobsDemo.Pages.Actions.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Action</h4>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Action.ActionName" class="control-label"></label>
+                <input asp-for="Action.ActionName" class="form-control" />
+                <span asp-validation-for="Action.ActionName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Action.ActionType" class="control-label"></label>
+                <input asp-for="Action.ActionType" class="form-control" placeholder="TypeName, AssemblyName" />
+                <span asp-validation-for="Action.ActionType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Action.ActionMore" class="control-label"></label>
+                <textarea asp-for="Action.ActionMore" class="form-control" rows="10"></textarea>
+                <span asp-validation-for="Action.ActionMore" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

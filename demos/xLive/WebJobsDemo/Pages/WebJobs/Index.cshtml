@@ -1,0 +1,75 @@
+﻿@page
+@model             IndexModel
+
+@{
+    ViewData["Title"] = "WebJobs";
+}
+
+<h1>WebJobs</h1>
+
+<form asp-page="./Index" method="get" autocomplete="off" class="row g-3">
+    <div class="col-auto">
+        <input name="date" type="date" class="form-control" placeholder="Date" value="@Model.Date">
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary mb-3">Refresh</button>
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+            @Html.DisplayNameFor(model => model.Jobs[0].JobId)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.Jobs[0].Created)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.Jobs[0].RuleName)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.Jobs[0].Started)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.Jobs[0].Finished)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.Jobs[0].JobMore)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.Jobs[0].JobStatus)
+            </th>
+        </tr>
+    </thead>
+    @if (Model.Jobs != null && Model.Jobs.Any())
+    {
+        <tbody>
+        @foreach (var item in Model.Jobs)
+        {
+                    <tr>
+                        <td>
+                    @Html.DisplayFor(modelItem => item.JobId)
+                        </td>
+                        <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                        </td>
+                        <td>
+                    @Html.DisplayFor(modelItem => item.RuleName)
+                        </td>
+                        <td>
+                    @Html.DisplayFor(modelItem => item.Started, "HH:mm:ss.ttt")
+                        </td>
+                        <td>
+                    @Html.DisplayFor(modelItem => item.Finished, "HH:mm:ss.ttt")
+                        </td>
+                        <td>
+                    @Html.DisplayFor(modelItem => item.JobMore)
+                        </td>
+                        <td>
+                    @Html.DisplayFor(modelItem => item.JobStatus)
+                        </td>
+                    </tr>
+        }
+        </tbody>
+    }
+</table>

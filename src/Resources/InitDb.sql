@@ -474,21 +474,18 @@ BEGIN
     RETURN (DATEPART(weekday, @Now) + @@DATEFIRST + 6) % 7
 END
 ';
-EXEC dbo.sp_executesql @statement = N'
+execute dbo.sp_executesql @statement = N'
 -- ==============================================================
 -- Copyright (c) Oleksandr Viktor (UkrGuru). All rights reserved.
 -- ==============================================================
-CREATE OR ALTER FUNCTION [dbo].[CronWord](@Expression varchar(100), @Separator char(1) = '' '', @Index int)
+CREATE OR ALTER FUNCTION [dbo].[CronWord](@Words varchar(100), @Separator char(1) = '' '', @Index int)
 RETURNS varchar(100)
 AS
 BEGIN
-    DECLARE @i int = 0, @v varchar(100);
-
-    SELECT @i = @i + 1, @v = CASE WHEN @i <= @Index THEN value ELSE @v END   
-    FROM STRING_SPLIT(@Expression, @Separator)
-    WHERE LEN(value) > 0
-
-    RETURN CASE WHEN @i < @Index THEN NULL ELSE @v END
+	RETURN (SELECT TOP 1 s.value FROM (
+		SELECT value, ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS ordinal
+		FROM STRING_SPLIT(@Words, @Separator)) s
+	WHERE s.ordinal = @Index);
 END
 ';
 END
@@ -593,12 +590,12 @@ EXEC dbo.sp_executesql @statement = N'
 CREATE OR ALTER PROCEDURE [WJbQueue_InsCron]
 AS
 INSERT INTO WJbQueue (RuleId, JobPriority, JobStatus)
-SELECT R.RuleId, R.RulePriority, 1 /* Queued */ 
-FROM WJbRules R
-WHERE R.Disabled = 0 
-AND NOT JSON_VALUE(R.RuleMore, ''$.cron'') IS NULL
-AND NOT EXISTS (SELECT 1 FROM WJbQueue WHERE RuleId = R.RuleId)
-AND dbo.CronValidate(JSON_VALUE(R.RuleMore, ''$.cron''), GETDATE()) = 1
+SELECT RuleId, RulePriority, 1 /* Queued */ 
+FROM WJbRules
+WHERE Disabled = 0 
+AND NOT JSON_VALUE(RuleMore, ''$.cron'') IS NULL
+AND NOT EXISTS (SELECT 1 FROM WJbQueue WHERE RuleId = WJbRules.RuleId)
+AND dbo.CronValidate(JSON_VALUE(RuleMore, ''$.cron''), GETDATE()) = 1
 ';
 EXEC dbo.sp_executesql @statement = N'
 CREATE OR ALTER PROCEDURE [WJbQueue_Get]
@@ -636,29 +633,9 @@ EXEC dbo.sp_executesql @statement = N'
 CREATE OR ALTER PROCEDURE [WJbSettings_Get]
 	@Data nvarchar(100)
 AS
-SELECT TOP 1 [Value]
+SELECT TOP (1) [Value]
 FROM WJbSettings
-WHERE Name = @Data
-';
-EXEC dbo.sp_executesql @statement = N'
-/*
-EXEC WJbSettings_Set ''{ "Name":"Name1", "Value":"Value1" }''
-*/
-CREATE OR ALTER PROCEDURE [WJbSettings_Set]
-	@Data nvarchar(max)
-AS
-DECLARE @Name nvarchar(100), @Value nvarchar(max)
-
-SELECT @Name = D.[Name], @Value = D.[Value]
-FROM OPENJSON(@Data) WITH ([Name] nvarchar(100), [Value] nvarchar(max)) D
-
-UPDATE WJbSettings
-SET [Value] = @Value
-WHERE ([Name] = @Name)
-
-IF @@ROWCOUNT = 0 
-    INSERT INTO WJbSettings ([Name], [Value]) 
-    VALUES (@Name, @Value)
+WHERE [Name] = @Data
 ';
 END
 

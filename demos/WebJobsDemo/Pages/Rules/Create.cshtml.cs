@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using UkrGuru.SqlJson;
 using UkrGuru.WebJobs.Data;
+using Action = UkrGuru.WebJobs.Data.Action;
 
 namespace WebJobsDemo.Pages.Rules;
 

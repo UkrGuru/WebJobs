@@ -2,21 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
-    <UserSecretsId>12dd54be-cd4e-4f6a-9c0b-459b55357aa2</UserSecretsId>
-    <Version>3.5.0</Version>
-    <Authors>Oleksandr Viktor (UkrGuru)</Authors>
-    <Company>Oleksandr Viktor (UkrGuru)</Company>
-    <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
-    <Description>Demonstration of use UkrGuru.WebJobs Package under a ASP.NET Core Website</Description>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Pages\Logs\**" />
-    <Content Remove="Pages\Logs\**" />
-    <EmbeddedResource Remove="Pages\Logs\**" />
-    <None Remove="Pages\Logs\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Resources\InitDb.sql" />
@@ -27,7 +14,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="UkrGuru.WebJobs" Version="4.0.3" />
+    <None Include="Pages\Actions\Create.cshtml" />
+    <None Include="Pages\Actions\Delete.cshtml" />
+    <None Include="Pages\Actions\Edit.cshtml" />
+    <None Include="Pages\Actions\Index.cshtml" />
+    <None Include="Pages\Rules\Create.cshtml" />
+    <None Include="Pages\Rules\Delete.cshtml" />
+    <None Include="Pages\Rules\Edit.cshtml" />
+    <None Include="Pages\Rules\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UkrGuru.WebJobs" Version="4.1.0" />
   </ItemGroup>
 
 </Project>
