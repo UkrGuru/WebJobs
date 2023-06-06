@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using UkrGuru.WebJobs.Data;
+using Xunit;
 
 namespace WebJobsTests;
 
@@ -7,8 +8,13 @@ public class JobExtensionsTests
     [Fact]
     public void CreateActionTest()
     {
-        //CreateAction
+        // Arrange
+        var job = new Job();
 
-        Assert.True(true);
+        // Act
+        var result = job.CreateAction();
+
+        // Assert
+        Assert.NotNull(result);
     }
 }

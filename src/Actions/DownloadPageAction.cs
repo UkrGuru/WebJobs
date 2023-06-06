@@ -8,15 +8,15 @@ using UkrGuru.Extensions.Logging;
 namespace UkrGuru.WebJobs.Actions;
 
 /// <summary>
-/// 
+/// Represents an action that downloads a page from a specified URL.
 /// </summary>
 public class DownloadPageAction : BaseAction
 {
     /// <summary>
-    /// 
+    /// Executes the download page action asynchronously.
     /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
+    /// <returns>A task that represents the asynchronous operation.The value of the TResult parameter contains a boolean value indicating whether the action was successful.</returns>
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var url = More.GetValue("url").ThrowIfBlank("url");

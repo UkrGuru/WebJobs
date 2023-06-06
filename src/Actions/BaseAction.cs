@@ -9,7 +9,7 @@ using UkrGuru.WebJobs.Data;
 namespace UkrGuru.WebJobs.Actions;
 
 /// <summary>
-/// 
+/// Represents the base class for actions that can be performed by a job.
 /// </summary>
 public class BaseAction
 {
@@ -20,24 +20,24 @@ public class BaseAction
     private const string FAIL_PREFIX = FAIL_RULE + "_";
 
     /// <summary>
-    /// 
+    /// Gets or sets the ID of the job associated with this action.
     /// </summary>
     public int JobId { get; set; }
 
     /// <summary>
-    /// 
+    /// Gets or sets additional information about the action.
     /// </summary>
     public More More { get; set; }
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the <see cref="BaseAction"/> class.
     /// </summary>
     public BaseAction() => More = new More();
 
     /// <summary>
-    /// 
+    /// Initializes the action with the specified job.
     /// </summary>
-    /// <param name="job"></param>
+    /// <param name="job">The job associated with this action.</param>
     public virtual void Init(Job job)
     {
         JobId = job.JobId;
@@ -48,10 +48,10 @@ public class BaseAction
     }
 
     /// <summary>
-    /// 
+    /// Executes the action asynchronously.
     /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a value indicating whether the action was executed successfully.</returns>
     public virtual async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         await Task.Delay(100, cancellationToken);
@@ -60,11 +60,11 @@ public class BaseAction
     }
 
     /// <summary>
-    /// 
+    /// Determines the next action to execute based on the result of this action and schedules it for execution asynchronously.
     /// </summary>
-    /// <param name="exec_result"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <param name="exec_result">A value indicating whether this action was executed successfully.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a value indicating whether the next action was scheduled successfully.</returns>
     public virtual async Task<bool> NextAsync(bool exec_result, CancellationToken cancellationToken = default)
     {
         var next_prefix = exec_result ? GOOD_PREFIX : FAIL_PREFIX;
@@ -89,18 +89,18 @@ public class BaseAction
     }
 
     /// <summary>
-    /// 
+    /// Truncates a string to a specified maximum length and adds an ellipsis if necessary.
     /// </summary>
-    /// <param name="text"></param>
-    /// <param name="maxLength"></param>
-    /// <returns></returns>
+    /// <param name="text">The text to truncate.</param>
+    /// <param name="maxLength">The maximum length of the truncated text.</param>
+    /// <returns>The truncated text.</returns>
     public static string? ShortStr(string? text, int maxLength) => (!string.IsNullOrEmpty(text)
         && text.Length > maxLength) ? string.Concat(text.AsSpan(0, maxLength), "...") : text;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="fileName"></param>
-    /// <returns></returns>
+    ///<summary> 
+    //Returns a local file name for a given file name by appending it with JobId. 
+    ///</summary> 
+    ///<param name="fileName">The file name to append with JobId</param> 
+    ///<returns>A local file name appended with JobId</returns> 
     public virtual string GetLocalFileName(string fileName) => $"#{this.JobId}-{fileName}";
 }

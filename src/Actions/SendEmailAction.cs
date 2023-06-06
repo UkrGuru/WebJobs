@@ -13,57 +13,57 @@ using UkrGuru.SqlJson;
 namespace UkrGuru.WebJobs.Actions;
 
 /// <summary>
-/// 
+/// Represents an action that sends an email.
 /// </summary>
 public class SendEmailAction : BaseAction
 {
     /// <summary>
-    /// 
+    /// Represents the settings for an SMTP server.
     /// </summary>
     public class SmtpSettings
     {
         /// <summary>
-        /// 
+        /// Gets or sets the email address of the sender.
         /// </summary>
         [JsonPropertyName("from")]
         public string? From { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the host name or IP address of the SMTP server.
         /// </summary>
         [JsonPropertyName("host")]
         public string? Host { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the port number used by the SMTP server.
         /// </summary>
         [JsonPropertyName("port")]
         public int Port { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets a value indicating whether SSL is used to encrypt the connection.
         /// </summary>
         [JsonPropertyName("enableSsl")]
         public bool EnableSsl { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the user name used to authenticate with the SMTP server.
         /// </summary>
         [JsonPropertyName("userName")]
         public string? UserName { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the password used to authenticate with the SMTP server.
         /// </summary>
         [JsonPropertyName("password")]
         public string? Password { get; set; }
     }
 
     /// <summary>
-    /// 
+    /// Executes the send email action asynchronously.
     /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
+    /// <returns>A task that represents the asynchronous operation.The value of the TResult parameter contains a boolean value indicating whether the action was successful.</returns>
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var smtp_settings_name = More.GetValue("smtp_settings_name").ThrowIfBlank("smtp_settings_name");
@@ -146,9 +146,14 @@ public class SendEmailAction : BaseAction
     }
 
     /// <summary>
-    /// 
+    /// Determines whether the specified string is an HTML body.
     /// </summary>
-    /// <param name="body"></param>
-    /// <returns></returns>
+    /// <param name="body">The string to check.</param>
+    /// <returns>A boolean value indicating whether the specified string is an HTML body.</returns>
     public static bool IsHtmlBody(string? body) => body != null && Regex.IsMatch(body, @"<\s*([^ >]+)[^>]*>.*?<\s*/\s*\1\s*>");  // or @"<[^>]+>"
-}
+
+//    public static bool IsHtmlBody(string? body)
+//    {
+//        return !string.IsNullOrEmpty(body) && Regex.IsMatch(body, @"<\s*([a-z]+)(?:\s+[^>]*)?>.*?<\s*/\s*\1\s*>", RegexOptions.IgnoreCase);
+//    }
+//}

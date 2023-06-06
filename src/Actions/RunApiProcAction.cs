@@ -10,34 +10,34 @@ using UkrGuru.SqlJson;
 namespace UkrGuru.WebJobs.Actions;
 
 /// <summary>
-/// 
+/// Represents an action that runs an API procedure.
 /// </summary>
 public class RunApiProcAction : BaseAction
 {
     /// <summary>
-    /// 
+    /// Represents the settings for an API.
     /// </summary>
     public class ApiSettings
     {
         /// <summary>
-        /// 
+        /// Gets or sets the URL of the API.
         /// </summary>
         [JsonPropertyName("url")]
         public string? Url { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the key for accessing the API.
         /// </summary>
         [JsonPropertyName("key")]
         public string? Key { get; set; }
     }
 
     /// <summary>
-    /// 
+    /// Executes the run API procedure action asynchronously.
     /// </summary>
-    /// <param name="cancellationToken"></param>
+    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
     /// <returns></returns>
-    /// <exception cref="Exception"></exception>
+    /// <exception cref="Exception">A task that represents the asynchronous operation.The value of the TResult parameter contains a boolean value indicating whether the action was successful.</exception>
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var api_settings_name = More.GetValue("api_settings_name").ThrowIfBlank("api_settings_name");

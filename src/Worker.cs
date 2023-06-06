@@ -10,7 +10,7 @@ using UkrGuru.WebJobs.Data;
 namespace UkrGuru.WebJobs;
 
 /// <summary>
-/// 
+/// The Worker class is a BackgroundService that executes jobs from a job queue.
 /// </summary>
 public class Worker : BackgroundService
 {
@@ -21,19 +21,22 @@ public class Worker : BackgroundService
 
     private int _delay = MIN_DELAY;
 
+    /// <summary>
+    /// The logger instance used to log messages and errors.
+    /// </summary>
     private readonly ILogger<Worker> _logger;
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the Worker class with the specified logger.
     /// </summary>
-    /// <param name="logger"></param>
+    /// <param name="logger">The logger instance to use.</param>
     public Worker(ILogger<Worker> logger) => _logger = logger;
 
     /// <summary>
-    /// 
+    /// Executes the background service, processing jobs from the job queue until stopped.
     /// </summary>
-    /// <param name="stoppingToken"></param>
-    /// <returns></returns>
+    /// <param name="stoppingToken">The cancellation token used to stop the service.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)

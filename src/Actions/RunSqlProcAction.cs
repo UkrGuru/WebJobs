@@ -8,15 +8,15 @@ using UkrGuru.SqlJson;
 namespace UkrGuru.WebJobs.Actions;
 
 /// <summary>
-/// 
+/// Represents an action that runs a SQL procedure.
 /// </summary>
 public class RunSqlProcAction : BaseAction
 {
     /// <summary>
-    /// 
+    /// Executes the run SQL procedure action asynchronously.
     /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
+    /// <returns>A task that represents the asynchronous operation.The value of the TResult parameter contains a boolean value indicating whether the action was successful.</returns>
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var proc = More.GetValue("proc").ThrowIfBlank("proc");

@@ -4,24 +4,24 @@
 namespace UkrGuru.WebJobs.Data;
 
 /// <summary>
-/// 
+/// Specifies the priority levels for a rule. 
 /// </summary>
 public enum Priorities : int
 {
     /// <summary>
-    /// 
+    /// Indicates that the rule should be processed as soon as possible.
     /// </summary>
     ASAP,
     /// <summary>
-    /// 
+    /// Indicates that the rule has a high priority.
     /// </summary>
     High,
     /// <summary>
-    /// 
+    /// Indicates that the rule has a normal priority.
     /// </summary>
     Normal,
     /// <summary>
-    /// 
+    /// Indicates that the rule has a low priority.
     /// </summary>
     Low
 }

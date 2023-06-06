@@ -4,58 +4,59 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace UkrGuru.WebJobs.Data;
 
 /// <summary>
-/// 
+/// Provides extension methods for working with ParsingGoal objects. 
 /// </summary>
 public static class ParsingGoalExtensions
 {
     /// <summary>
-    /// 
+    /// Represents a parsing goal with a name, parent, start and end markers, and a value.
     /// </summary>
     public class ParsingGoal
     {
         /// <summary>
-        /// 
+        /// The name of the parsing goal.
         /// </summary>
         [Key]
         [JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
-        /// 
+        /// The parent of the parsing goal.
         /// </summary>
         [JsonPropertyName("parent")]
         public string? Parent { get; set; } = string.Empty;
 
         /// <summary>
-        /// 
+        /// The start marker of the parsing goal.
         /// </summary>
         [JsonPropertyName("start")]
         public string? Start { get; set; }
 
         /// <summary>
-        /// 
+        /// The end marker of the parsing goal.
         /// </summary>
         [JsonPropertyName("end")]
         public string? End { get; set; }
 
         /// <summary>
-        /// 
+        /// The value of the parsing goal.
         /// </summary>
         [JsonPropertyName("value")]
         public string? Value { get; set; }
     }
 
     /// <summary>
-    /// 
+    /// Appends a root node to the specified array of ParsingGoal objects using the specified text.
     /// </summary>
-    /// <param name="goals"></param>
-    /// <param name="text"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
+    /// <param name="goals">The array of ParsingGoal objects to append to.</param>
+    /// <param name="text">The text to use for the root node.</param>
+    /// <returns>An array of ParsingGoal objects with the appended root node.</returns>
+    /// <exception cref="Exception">Thrown when a root node is already present in the array of ParsingGoal objects.</exception>
     public static ParsingGoal[] AppendRootNode(this ParsingGoal[] goals, string text)
     {
         var root = goals.FirstOrDefault(e => e.Name == string.Empty);
@@ -68,12 +69,12 @@ public static class ParsingGoalExtensions
     }
 
     /// <summary>
-    /// 
+    /// Parses the value of the specified ParsingGoal object using the specified array of ParsingGoal objects.
     /// </summary>
-    /// <param name="goals"></param>
-    /// <param name="goal"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
+    /// <param name="goals">The array of ParsingGoal objects to use for parsing.</param>
+    /// <param name="goal">The ParsingGoal object to parse.</param>
+    /// <returns>The parsed value of the specified ParsingGoal object.</returns>
+    /// <exception cref="Exception">Thrown when an unknown parent is encountered.</exception>
     public static string? ParseValue(this ParsingGoal[] goals, ParsingGoal? goal)
     {
         if (string.IsNullOrEmpty(goal?.Name)) return goal?.Value;
@@ -90,18 +91,18 @@ public static class ParsingGoalExtensions
     }
 
     /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="goals"></param>
-    /// <param name="name"></param>
-    /// <returns></returns>
+    /// Determines whether the specified name is a leaf node in the specified array of ParsingGoal objects.
+    ///</summary> 
+    /// <param name="goals">The array of ParsingGoal objects to search.</param>
+    /// <param name="name">The name to search for.</param>
+    /// <returns>true if the specified name is a leaf node; otherwise, false.</returns>
     public static bool IsLeaf(this ParsingGoal[] goals, string name) => !goals.Any(e => e.Parent == name);
 
     /// <summary>
-    /// 
+    /// Gets the result of parsing the specified array of ParsingGoal objects.
     /// </summary>
-    /// <param name="goals"></param>
-    /// <returns></returns>
+    /// <param name="goals">The array of ParsingGoal objects to parse.</param>
+    /// <returns>A JSON string representing the result of parsing the specified array of ParsingGoal objects.</returns>
     public static string? GetResult(this ParsingGoal[] goals)
     {
         var dict = new Dictionary<string, object?>();
@@ -115,12 +116,12 @@ public static class ParsingGoalExtensions
     }
 
     /// <summary>
-    /// 
+    /// Crops the specified text using the specified start and end markers.
     /// </summary>
-    /// <param name="text"></param>
-    /// <param name="start"></param>
-    /// <param name="end"></param>
-    /// <returns></returns>
+    /// <param name="text">The text to crop.</param>
+    /// <param name="start">The start marker to use for cropping.</param>
+    /// <param name="end">The end marker to use for cropping.</param>
+    /// <returns>The cropped text.</returns>
     public static string? Crop(string? text, string? start, string? end = default)
     {
         if (text == null) return null;
@@ -150,4 +151,14 @@ public static class ParsingGoalExtensions
 
         return result;
     }
+
+    //public static string? Crop(string? text, string? start, string? end = default)
+    //{
+    //    if (text == null) return null;
+
+    //    var pattern = Regex.Escape(start) + "(.*?)" + (end != null ? Regex.Escape(end) : "");
+    //    var match = Regex.Match(text, pattern);
+
+    //    return match.Success ? match.Groups[1].Value.Trim() : null;
+    //}
 }

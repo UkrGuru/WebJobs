@@ -7,26 +7,26 @@ using UkrGuru.SqlJson;
 
 namespace UkrGuru.WebJobs;
 /// <summary>
-/// 
+/// The Scheduler class is a BackgroundService that schedules and executes Cron jobs.
 /// </summary>
 public class Scheduler : BackgroundService
 {
     /// <summary>
-    /// 
+    /// The logger instance used to log messages and errors.
     /// </summary>
     private readonly ILogger<Scheduler> _logger;
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the Scheduler class with the specified logger.
     /// </summary>
-    /// <param name="logger"></param>
+    /// <param name="logger">The logger instance to use.</param>
     public Scheduler(ILogger<Scheduler> logger) => _logger = logger;
 
     /// <summary>
-    /// 
+    /// Executes the background service, scheduling and executing Cron jobs until stopped.
     /// </summary>
-    /// <param name="stoppingToken"></param>
-    /// <returns></returns>
+    /// <param name="stoppingToken">The cancellation token used to stop the service.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await WaitForNewMinute();
@@ -40,10 +40,10 @@ public class Scheduler : BackgroundService
     }
 
     /// <summary>
-    /// 
+    /// Creates Cron jobs by calling the WJbQueue_InsCron stored procedure.
     /// </summary>
-    /// <param name="stoppingToken"></param>
-    /// <returns></returns>
+    /// <param name="stoppingToken">The cancellation token used to stop the operation.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     protected virtual async Task CreateCronJobs(CancellationToken stoppingToken)
     {
         try
@@ -57,9 +57,9 @@ public class Scheduler : BackgroundService
     }
 
     /// <summary>
-    /// 
+    /// Waits for the start of a new minute by calling a SQL WAITFOR statement.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     private async Task WaitForNewMinute()
     {
         try
