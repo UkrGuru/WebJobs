@@ -156,4 +156,4 @@ public class SendEmailAction : BaseAction
 //    {
 //        return !string.IsNullOrEmpty(body) && Regex.IsMatch(body, @"<\s*([a-z]+)(?:\s+[^>]*)?>.*?<\s*/\s*\1\s*>", RegexOptions.IgnoreCase);
 //    }
-//}
+}

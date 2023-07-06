@@ -1,10 +1,7 @@
 ﻿// Copyright (c) Oleksandr Viktor (UkrGuru). All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-using Microsoft.SqlServer.Server;
-using System.Diagnostics.Metrics;
 using System.Net;
-using System.Runtime.Intrinsics.X86;
 using System.Text.Json.Serialization;
 using System.Web;
 using UkrGuru.Extensions;

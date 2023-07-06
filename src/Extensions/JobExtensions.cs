@@ -20,7 +20,7 @@ public static class JobExtensions
     {
         ArgumentNullException.ThrowIfNull(job.ActionType);
 
-        var type = Type.GetType(job.ActionType) ?? Type.GetType($"UkrGuru.WebJobs.Actions.{job.ActionType}");
+        var type = Type.GetType($"UkrGuru.WebJobs.Actions.{job.ActionType}") ?? Type.GetType(job.ActionType);
         ArgumentNullException.ThrowIfNull(type);
 
         dynamic? action = Activator.CreateInstance(type);

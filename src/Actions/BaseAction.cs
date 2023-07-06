@@ -98,7 +98,7 @@ public class BaseAction
         && text.Length > maxLength) ? string.Concat(text.AsSpan(0, maxLength), "...") : text;
 
     ///<summary> 
-    //Returns a local file name for a given file name by appending it with JobId. 
+    ///Returns a local file name for a given file name by appending it with JobId. 
     ///</summary> 
     ///<param name="fileName">The file name to append with JobId</param> 
     ///<returns>A local file name appended with JobId</returns> 
