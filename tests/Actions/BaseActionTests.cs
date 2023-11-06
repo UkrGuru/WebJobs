@@ -1,35 +1,56 @@
-﻿using UkrGuru.WebJobs.Actions;
+﻿using System.Threading.Tasks;
+using UkrGuru.SqlJson;
+using UkrGuru.WebJobs.Actions;
 using UkrGuru.WebJobs.Data;
-using Xunit;
+using static UkrGuru.WebJobs.GlobalTests;
 
 namespace WebJobsTests.Actions;
 
 public class BaseActionTests
 {
+    private const string GOOD_RULE = "next";
+    private const string FAIL_RULE = "fail";
+
     public BaseActionTests()
     {
+        DbHelper.ConnectionString = ConnectionString;
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_ReturnsTrue()
+    {
+        var job = new Job() { ActionType = nameof(BaseAction) };
+        
+        var action = job.CreateAction();
+
+        var result = await action.ExecuteAsync();
+
+        Assert.True(result);
     }
 
     [Theory]
-    [InlineData(null, null, null, null)]
-
-    [InlineData(null, null, """{"test":"jjj"}""", "jjj")]
-    [InlineData(null, """{"test":"rrr"}""", """{"test":"jjj"}""", "jjj")]
-    [InlineData("""{"test":"aaa"}""", null, """{"test":"jjj"}""", "jjj")]
-    [InlineData("""{"test":"aaa"}""", """{"test":"rrr"}""", """{"test":"jjj"}""", "jjj")]
-
-    [InlineData(null, """{"test":"rrr"}""", null, "rrr")]
-    [InlineData("""{"test":"aaa"}""", """{"test":"rrr"}""", null, "rrr")]
-
-    [InlineData("""{"test":"aaa"}""", null, null, "aaa")]
-    public void InitTest(string? actionMore, string? ruleMore, string jobMore, string? expected)
+    [InlineData(true, null)]
+    [InlineData(true, """{"next": null}""")]
+    [InlineData(true, """{"next": ""}""")]
+    [InlineData(false, null)]
+    [InlineData(false, """{"fail": null}""")]
+    [InlineData(false, """{"fail": ""}""")]
+    public async Task NextAsync_ReturnsFalse(bool exec_result, string? more)
     {
-        Job job = new() { ActionMore = actionMore, RuleMore = ruleMore, JobMore = jobMore };
+        var job = new Job() { ActionType = nameof(BaseAction), JobMore = more };
 
-        var action = new BaseAction();
+        Assert.False(await job.CreateAction().NextAsync(exec_result));
+    }
 
-        action.Init(job);
+    [Theory]
+    [InlineData(true, """{"next": 1, "next_proc": "Next" }""")]
+    [InlineData(false, """{"fail": 1, "fail_proc": "Next" }""")]
+    public async Task NextAsync_ReturnsTrue(bool exec_result, string? more)
+    {
+        var job = new Job() { ActionType = nameof(BaseAction), JobMore = more };
 
-        Assert.Equal(expected, action.More.GetValue("test"));
+        Assert.True(await job.CreateAction().NextAsync(exec_result));
+        
+        await DbHelper.DeleteAsync("DELETE WJbQueue WHERE JSON_VALUE(JobMore, '$.proc') = 'Next'");
     }
 }

@@ -26,7 +26,7 @@ public partial class Rule: Action
     /// Gets or sets the priority of the rule.
     /// </summary>
     [Display(Name = "Priority")]
-    public Priorities RulePriority { get; set; } = Priorities.Normal;
+    public Priority RulePriority { get; set; } = Priority.Normal;
 
     /// <summary>
     /// Gets or sets additional information about the rule.

@@ -3,9 +3,9 @@ using static UkrGuru.WebJobs.GlobalTests;
 
 namespace WebJobsTests.Actions;
 
-public class ProcItemsActionTests
+public class SendHttpRequestActionTests
 {
-    public ProcItemsActionTests()
+    public SendHttpRequestActionTests()
     {
         DbHelper.ConnectionString = ConnectionString;
     }

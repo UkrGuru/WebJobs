@@ -2,21 +2,20 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using System.Text.RegularExpressions;
-using UkrGuru.Extensions;
-using UkrGuru.Extensions.Logging;
+using UkrGuru.SqlJson.Extensions;
 
 namespace UkrGuru.WebJobs.Actions;
 
 /// <summary>
-/// 
+/// Represents an action that fills templates with values from the current job's <see cref="More"/> object.
 /// </summary>
 public class FillTemplateAction : BaseAction
 {
     /// <summary>
-    /// 
+    /// Executes the action asynchronously.
     /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result is true if the action was executed successfully, otherwise false.</returns>
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         string template_prefix = "template_", tvalue_prefix = "tvalue_";

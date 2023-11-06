@@ -153,7 +153,7 @@ namespace CsvHelperTests
 
             var dbFile = new DbFile() { FileName = "customers.csv", FileContent = Encoding.UTF8.GetBytes(csv) };
 
-            var guidFile = await dbFile.SetAsync();
+            var guidFile = await dbFile.SetAsync<string?>();
 
             Assert.NotNull(guidFile);
 

@@ -44,8 +44,8 @@ Created on base ClosedXML package for processing files in Excel format.</Descrip
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.100.3" />
-    <PackageReference Include="UkrGuru.WebJobs" Version="4.0.2" />
+    <PackageReference Include="ClosedXML" Version="0.102.0" />
+    <PackageReference Include="UkrGuru.WebJobs" Version="4.4.0" />
   </ItemGroup>
 
 </Project>

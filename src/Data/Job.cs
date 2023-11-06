@@ -30,7 +30,7 @@ public partial class Job : Rule
     /// Gets or sets the priority of the job.
     /// </summary>
     [Display(Name = "Priority")]
-    public Priorities JobPriority { get; set; } = Priorities.Normal;
+    public Priority JobPriority { get; set; } = Priority.Normal;
 
     /// <summary>
     /// Gets or sets the date and time when the job was created.

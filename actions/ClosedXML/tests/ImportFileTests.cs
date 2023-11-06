@@ -51,7 +51,7 @@ namespace ClosedXMLTests
 
             var wjbFile = new DbFile() { FileName = "customers.csv", FileContent = bytes };
 
-            var guidFile = await wjbFile.SetAsync();
+            var guidFile = await wjbFile.SetAsync<string?>();
 
             Assert.NotNull(guidFile);
 

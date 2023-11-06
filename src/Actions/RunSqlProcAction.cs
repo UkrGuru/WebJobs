@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Oleksandr Viktor (UkrGuru). All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-using UkrGuru.Extensions;
-using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
+using UkrGuru.SqlJson.Extensions;
 
 namespace UkrGuru.WebJobs.Actions;
 
@@ -29,19 +28,21 @@ public class RunSqlProcAction : BaseAction
 
         await DbLogHelper.LogDebugAsync(nameof(RunSqlProcAction), new { jobId = JobId, proc, data = ShortStr(data, 200), result_name, timeout }, cancellationToken);
 
-        if (string.IsNullOrEmpty(result_name))
-        {
-            _ = await DbHelper.ExecAsync($"WJb_{proc}", data, timeout, cancellationToken);
-
-            await DbLogHelper.LogInformationAsync(nameof(RunSqlProcAction), new { jobId = JobId, result = "OK" }, cancellationToken);
-        }
-        else
+        if (result_name?.Length > 0)
         {
             var result = await DbHelper.ExecAsync<string?>($"WJb_{proc}", data, timeout, cancellationToken);
 
             await DbLogHelper.LogInformationAsync(nameof(RunSqlProcAction), new { jobId = JobId, result = ShortStr(result, 200) }, cancellationToken);
 
             More[result_name] = result;
+
+            return GetDecision(result);
+        }
+        else
+        {
+            await DbHelper.ExecAsync($"WJb_{proc}", data, timeout, cancellationToken);
+
+            await DbLogHelper.LogInformationAsync(nameof(RunSqlProcAction), new { jobId = JobId, result = "OK" }, cancellationToken);
         }
 
         return true;

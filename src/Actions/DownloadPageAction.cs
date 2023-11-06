@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Oleksandr Viktor (UkrGuru). All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-using UkrGuru.Extensions;
-using UkrGuru.Extensions.Data;
-using UkrGuru.Extensions.Logging;
+using UkrGuru.SqlJson.Extensions;
 
 namespace UkrGuru.WebJobs.Actions;
 
@@ -19,9 +17,10 @@ public class DownloadPageAction : BaseAction
     /// <returns>A task that represents the asynchronous operation.The value of the TResult parameter contains a boolean value indicating whether the action was successful.</returns>
     public override async Task<bool> ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        var url = More.GetValue("url").ThrowIfBlank("url");
+        var url = More.GetValue("url"); ArgumentNullException.ThrowIfNull(url);
 
-        var filename = GetLocalFileName(More.GetValue("filename") ?? "file.txt");
+        // var filename = GetLocalFileName(More.GetValue("filename") ?? "file.txt");
+        var filename = More.GetValue("filename") ?? "file.txt";
 
         var result_name = More.GetValue("result_name") ?? "next_body";
 

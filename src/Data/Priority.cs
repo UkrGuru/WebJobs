@@ -6,7 +6,7 @@ namespace UkrGuru.WebJobs.Data;
 /// <summary>
 /// Specifies the priority levels for a rule. 
 /// </summary>
-public enum Priorities : int
+public enum Priority
 {
     /// <summary>
     /// Indicates that the rule should be processed as soon as possible.

@@ -1,11 +1,13 @@
-﻿using Xunit;
+﻿using UkrGuru.SqlJson;
+using static UkrGuru.WebJobs.GlobalTests;
 
-namespace WebJobsTests;
+namespace WebJobsTests.Actions;
 
 public class RunApiProcActionTests
 {
     public RunApiProcActionTests()
     {
+        DbHelper.ConnectionString = ConnectionString;
     }
 
     [Fact]

@@ -3,9 +3,8 @@
 
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
-using UkrGuru.Extensions;
-using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
+using UkrGuru.SqlJson.Extensions;
 using UkrGuru.WebJobs;
 
 namespace Microsoft.Extensions.DependencyInjection;

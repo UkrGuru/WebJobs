@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Oleksandr Viktor (UkrGuru). All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-using UkrGuru.Extensions;
-using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
+using UkrGuru.SqlJson.Extensions;
 
 namespace UkrGuru.WebJobs.Actions;
 
@@ -32,7 +31,7 @@ public class ProcItemsAction : BaseAction
         {
             int? result = 0;
 
-            var more = await DbHelper.ExecAsync<string?>("WJbItems_Get_More",
+            var more = await DbHelper.ReadAsync<string?>("WJbItems_Get_More",
                 new { FileId = fileId, ItemNo = i }, cancellationToken: cancellationToken);
 
             if (more == null) break;
@@ -49,7 +48,7 @@ public class ProcItemsAction : BaseAction
             }
             finally
             {
-                _ = await DbHelper.ExecAsync("WJbItems_Set_Result",
+                await DbHelper.UpdateAsync("WJbItems_Set_Result",
                     new { FileId = fileId, ItemNo = i, Result = result }, timeout, cancellationToken: cancellationToken);
             }
 

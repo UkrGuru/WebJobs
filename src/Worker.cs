@@ -3,8 +3,8 @@
 
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
+using UkrGuru.SqlJson.Extensions;
 using UkrGuru.WebJobs.Data;
 
 namespace UkrGuru.WebJobs;
@@ -16,10 +16,8 @@ public class Worker : BackgroundService
 {
     private const int NO_DELAY = 0;
     private const int MIN_DELAY = 100;
-    private const int ADD_DELAY = 1000;
+    private const int NEW_DELAY = 1000;
     private const int MAX_DELAY = 20000;
-
-    private int _delay = MIN_DELAY;
 
     /// <summary>
     /// The logger instance used to log messages and errors.
@@ -39,55 +37,58 @@ public class Worker : BackgroundService
     /// <returns>A Task representing the asynchronous operation.</returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        int delay = MIN_DELAY;
+
         while (!stoppingToken.IsCancellationRequested)
         {
             try
             {
-                var job = await DbHelper.ExecAsync<JobQueue>("WJbQueue_Start1st", cancellationToken: stoppingToken);
+                var job = await WJbDbHelper.WJbQueue_Start1stAsync(stoppingToken);
                 if (job?.JobId > 0)
                 {
-                    var jobId = job.JobId; bool exec_result = false, next_result = false;
+                    bool exec_result = false, next_result = false;
                     try
                     {
                         var action = job.CreateAction();
 
-                        if (action != null)
-                        {
-                            exec_result = await action.ExecuteAsync(stoppingToken);
+                        exec_result = await action.ExecuteAsync(stoppingToken);
 
-                            next_result = await action.NextAsync(exec_result, stoppingToken);
-                        }
+                        next_result = await action.NextAsync(exec_result, stoppingToken);
+
+                        delay = next_result ? NO_DELAY : MIN_DELAY;
                     }
                     catch (Exception ex)
                     {
                         exec_result = false;
 
-                        _logger.LogError(ex, $"Job #{jobId} crashed.", nameof(ExecuteAsync));
-                        await DbLogHelper.LogErrorAsync($"Job #{jobId} crashed.", new { jobId, errMsg = ex.Message }, stoppingToken);
+                        delay += NEW_DELAY;
+
+                        _logger.LogError(ex, $"Job #{job.JobId} crashed.", nameof(ExecuteAsync));
+
+                        await DbLogHelper.LogErrorAsync(job.ActionType ?? nameof(Worker), 
+                            new { jobId = job.JobId, errMsg = ex.Message }, stoppingToken);
                     }
                     finally
                     {
-                        _ = await DbHelper.ExecAsync("WJbQueue_Finish", new { JobId = jobId, 
-                                JobStatus = exec_result ? JobStatus.Completed : JobStatus.Failed }, 
-                                cancellationToken: stoppingToken);
+                        await WJbDbHelper.WJbQueue_FinishAsync(job.JobId, exec_result, stoppingToken);
                     }
-
-                    _delay = next_result ? NO_DELAY : MIN_DELAY;
                 }
                 else
                 {
-                    if (_delay < MAX_DELAY) _delay += ADD_DELAY;
+                    if (delay < MAX_DELAY) delay += NEW_DELAY;
                 }
             }
             catch (Exception ex)
             {
+                delay += NEW_DELAY;
+
                 _logger.LogError(ex, "Worker.ExecuteAsync Error", nameof(ExecuteAsync));
             }
 
-            if (_delay > 0) 
-                await Task.Delay(_delay, stoppingToken);
+            if (delay > 0) 
+                await Task.Delay(delay, stoppingToken);
             else
-                _delay = MIN_DELAY;
+                delay = MIN_DELAY;
         }
     }
 }

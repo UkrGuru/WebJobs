@@ -5,8 +5,8 @@ global using Xunit;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Reflection;
-using UkrGuru.Extensions;
 using UkrGuru.SqlJson;
+using UkrGuru.SqlJson.Extensions;
 
 namespace UkrGuru.WebJobs;
 
@@ -14,42 +14,55 @@ public class GlobalTests
 {
     public const string DbName = "WebJobsTest5";
 
-    public const string ConnectionString = $"Server=(localdb)\\mssqllocaldb;Database={DbName};Trusted_Connection=True";
+    private static string? _connectionString;
 
-    public static bool DbOk { get; set; }
+    public static string ConnectionString
+    {
+        get
+        {
+            _connectionString ??= $"Server=(localdb)\\mssqllocaldb;Database={DbName};Trusted_Connection=True";
 
-    public static IConfiguration? Configuration { get; set; }
+            return _connectionString;
+        }
+    }
+
+    private static IConfiguration? _configuration;
+
+    public static IConfiguration Configuration
+    {
+        get
+        {
+            if (_configuration == null)
+            {
+                var inMemorySettings = new Dictionary<string, string?>() {
+                    { "ConnectionStrings:DefaultConnection", ConnectionString},
+                    { "Logging:LogLevel:UkrGuru.SqlJson", "Information" },
+                    { "AppSettings:WJbInitDb", "true" },
+                    { "AppSettings:WJbNThreads", "0" }
+                };
+
+                _configuration = new ConfigurationBuilder()
+                    .AddInMemoryCollection(inMemorySettings)
+                    .Build();
+            }
+
+            return _configuration;
+        }
+    }
 
     public GlobalTests()
     {
-        if (DbOk) return;
-
-        DbHelper.ConnectionString = ConnectionString.Replace(DbName, "master");
-
-        DbHelper.Exec($"IF DB_ID('{DbName}') IS NULL CREATE DATABASE {DbName};");
-
-        DbHelper.ConnectionString = ConnectionString;
-
-        Assembly.GetAssembly(typeof(UkrGuru.SqlJson.DbHelper)).InitDb();
-
-        Assembly.GetAssembly(typeof(UkrGuru.WebJobs.Worker)).InitDb();
-
-        //Assembly.GetExecutingAssembly().InitDb();
-
-        //var inMemorySettings = new Dictionary<string, string?>() {
-        //    { "ConnectionStrings:DefaultConnection", ConnectionString },
-        //    { "Logging:LogLevel:UkrGuru.SqlJson", "Debug" },
-        //    { "WJbSettings:InitDb", "true" },
-        //    { "WJbSettings:NThreads", "0" }
-        //};
-
-        //Configuration = new ConfigurationBuilder()
-        //    .AddInMemoryCollection(inMemorySettings)
-        //    .Build();
-
-        DbOk = true;
     }
 
     [Fact]
-    public void CanInitDbs() { }
+    public void CanInitDbs()
+    {
+        DbHelper.ConnectionString = ConnectionString;
+
+        Assembly.GetAssembly(typeof(DbHelper)).InitDb();
+
+        Assembly.GetAssembly(typeof(Worker)).InitDb();
+
+        //Assembly.GetExecutingAssembly().InitDb();
+    }
 }

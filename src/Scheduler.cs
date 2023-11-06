@@ -4,8 +4,10 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using UkrGuru.SqlJson;
+using UkrGuru.SqlJson.Extensions;
 
 namespace UkrGuru.WebJobs;
+
 /// <summary>
 /// The Scheduler class is a BackgroundService that schedules and executes Cron jobs.
 /// </summary>
@@ -27,15 +29,15 @@ public class Scheduler : BackgroundService
     /// </summary>
     /// <param name="stoppingToken">The cancellation token used to stop the service.</param>
     /// <returns>A Task representing the asynchronous operation.</returns>
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken = default)
     {
-        await WaitForNewMinute();
+        await WaitForNewMinute(stoppingToken);
 
         while (!stoppingToken.IsCancellationRequested)
         {
             await Task.Run(async () => await CreateCronJobs(stoppingToken), cancellationToken: stoppingToken);
 
-            await Task.Delay(TimeSpan.FromSeconds(60), stoppingToken);
+            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
         }
     }
 
@@ -44,15 +46,17 @@ public class Scheduler : BackgroundService
     /// </summary>
     /// <param name="stoppingToken">The cancellation token used to stop the operation.</param>
     /// <returns>A Task representing the asynchronous operation.</returns>
-    protected virtual async Task CreateCronJobs(CancellationToken stoppingToken)
+    protected virtual async Task CreateCronJobs(CancellationToken stoppingToken = default)
     {
         try
         {
-            await DbHelper.ExecAsync("WJbQueue_InsCron", cancellationToken: stoppingToken);
+            await WJbDbHelper.WJbQueue_InsCronAsync(stoppingToken);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "CreateCronJobs Error", nameof(CreateCronJobs));
+
+            await DbLogHelper.LogErrorAsync(nameof(CreateCronJobs), new { errMsg = ex.Message }, stoppingToken);
         }
     }
 
@@ -60,11 +64,11 @@ public class Scheduler : BackgroundService
     /// Waits for the start of a new minute by calling a SQL WAITFOR statement.
     /// </summary>
     /// <returns>A Task representing the asynchronous operation.</returns>
-    private async Task WaitForNewMinute()
+    private async Task WaitForNewMinute(CancellationToken stoppingToken = default)
     {
         try
         {
-            await DbHelper.ExecAsync("DECLARE @Delay varchar(10) = '00:00:' + FORMAT(60 - DATEPART(SECOND, GETDATE()), '00'); WAITFOR DELAY @Delay;", timeout: 100);
+            await WJbDbHelper.DelayAsync(stoppingToken);
         }
         catch (Exception ex)
         {

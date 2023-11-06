@@ -14,18 +14,21 @@ public static class JobExtensions
     /// <param name="job">The <see cref="Job"/> for which to create an action object.</param>
     /// <returns>An action object for the specified <see cref="Job"/>.</returns>
     /// <exception cref="ArgumentNullException">
-    /// Thrown if the <see cref="Action.ActionType"/> property of the <paramref name="job"/> is <c>null</c>.
+    /// Thrown if the <see cref="Action.ActionType"/> property of the <paramref name="job"/> is <c>null</c>. 
+    /// Thrown if the <see cref="Action.ActionType"/> is unknown type. 
+    /// Thrown if CreateInstance for <see cref="Action.ActionType"/> return null.
     /// </exception>
-    public static dynamic? CreateAction(this Job job)
+    public static dynamic CreateAction(this Job job)
     {
         ArgumentNullException.ThrowIfNull(job.ActionType);
-
+    
         var type = Type.GetType($"UkrGuru.WebJobs.Actions.{job.ActionType}") ?? Type.GetType(job.ActionType);
         ArgumentNullException.ThrowIfNull(type);
 
         dynamic? action = Activator.CreateInstance(type);
+        ArgumentNullException.ThrowIfNull(action);
 
-        action?.Init(job);
+        action!.Init(job);
 
         return action;
     }

@@ -1,11 +1,10 @@
-﻿using Xunit;
-using UkrGuru.WebJobs.Data;
+﻿using UkrGuru.WebJobs.Data;
 using System.Linq;
 using static UkrGuru.WebJobs.Data.ParsingGoalExtensions;
 
 namespace WebJobsTests.Extensions;
 
-public class ParseTextExtensionsTests
+public static class ParseTextExtensionsTests
 {
     public static string Text = @"Order #123 from 01/07/2022
 
@@ -39,7 +38,10 @@ Payment/Order Notes:
     };
 
     public static string Result = @"{""OrderId"":""123"",""From"":""01/07/2022"",""Customer"":""Company #1"",""Salesperson"":""Maria"",""Order Details"":""Product|Qty|Unit Price|Discount|Total Price|Status\r\nPears|30|30.00|10.00%|810.00|Invoiced\r\nApples|30|53.00|10.00%|1431.00|Invoiced"",""Grand Total"":""2241.00"",""Payment Type"":""Check"",""Payment Date"":""01/07/2022"",""Payment Notes"":""""}";
+}
 
+public class ParsingGoalExtensionsTests
+{
     [Theory]
     [InlineData("OrderId", "", "123")]
     [InlineData("From", "", "01/07/2022")]
@@ -51,7 +53,7 @@ Payment/Order Notes:
     [InlineData("Payment Notes", "Payment Information", "")]
     public void GoalsParseValueTest(string name, string? parent, string? expected = default)
     {
-        var goals = Goals.AppendRootNode(Text);
+        var goals = ParseTextExtensionsTests.Goals.AppendRootNode(ParseTextExtensionsTests.Text);
 
         var goal = goals.FirstOrDefault(e => e.Name.Equals(name) && e.Parent == parent);
 
@@ -68,7 +70,7 @@ Payment/Order Notes:
     [InlineData("", false)]
     public void GoalsIsLeafTest(string name, bool expected = default)
     {
-        var goals = Goals.AppendRootNode(Text);
+        var goals = ParseTextExtensionsTests.Goals.AppendRootNode(ParseTextExtensionsTests.Text);
 
         Assert.Equal(expected, goals.IsLeaf(name));
     }
@@ -153,9 +155,6 @@ Payment/Order Notes:
     [InlineData("012", "1", "2", "")]
     [InlineData("012", "2", "1", null)]
     [InlineData("012", "1", "3", null)]
-
-    public void CropTest(string? text, string? start, string? end = default, string? expected = default)
-    {
-        Assert.Equal(expected, ParsingGoalExtensions.Crop(text, start, end));
-    }
+    public void CropTest(string? text, string? start, string? end = default, string? expected = default) 
+        => Assert.Equal(expected, Crop(text, start, end));
 }

@@ -52,7 +52,7 @@
 
   <ItemGroup>
     <PackageReference Include="SSH.NET" Version="2020.0.2" />
-    <PackageReference Include="UkrGuru.WebJobs" Version="4.0.2" />
+    <PackageReference Include="UkrGuru.WebJobs" Version="4.4.0" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net7.0;net6.0</TargetFrameworks>
+        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Authors>UkrGuru</Authors>
@@ -12,11 +12,11 @@
         <PackageIcon>ukrguru-logo.jpg</PackageIcon>
         <RepositoryUrl>https://github.com/UkrGuru/WebJobs</RepositoryUrl>
         <Description>The UkrGuru.WebJobs package is a Scheduler and N-Workers for any base( or custom) Actions in .NET apps. Supports CRON expressions in Rules. Supports polymorphism for Action/Rule/Job parameters and transferring the result of the Job to the next Job, based on the results of the current Job. Uses UkrGuru.SqlJson to quickly run stored procedures on sql server.      </Description>
-        <Version>4.4.0</Version>
+        <Version>4.6.7</Version>
         <SignAssembly>True</SignAssembly>
         <AssemblyOriginatorKeyFile>..\..\UkrGuru.snk</AssemblyOriginatorKeyFile>
         <PackageTags>scheduler worker sftp pop3 email template ssrs csv excel xlsx .net sqlserver webjobs</PackageTags>
-        <PackageReleaseNotes>Up to last UrkGuru.SqlJson version</PackageReleaseNotes>
+        <PackageReleaseNotes>Up to last UrkGuru.SqlJson version.</PackageReleaseNotes>
         <DebugType>none</DebugType>
         <DelaySign>False</DelaySign>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -38,6 +38,22 @@
         <DebugType>full</DebugType>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0|AnyCPU'">
+      <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
+      <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0|AnyCPU'">
+      <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
+      <DebugType>portable</DebugType>
+    </PropertyGroup>
+
     <ItemGroup>
       <Compile Remove="Properties\**" />
       <EmbeddedResource Remove="Properties\**" />
@@ -45,9 +61,13 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Remove="Actions\BaseAction - Copy.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
-        <PackageReference Include="UkrGuru.SqlJson" Version="6.4.0" />
+        <PackageReference Include="UkrGuru.SqlJson" Version="6.7.7" />
     </ItemGroup>
 
     <ItemGroup>

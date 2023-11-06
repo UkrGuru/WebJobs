@@ -5,10 +5,8 @@ using System.Net;
 using System.Net.Mail;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using UkrGuru.Extensions;
-using UkrGuru.Extensions.Data;
-using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
+using UkrGuru.SqlJson.Extensions;
 
 namespace UkrGuru.WebJobs.Actions;
 
@@ -68,7 +66,7 @@ public class SendEmailAction : BaseAction
     {
         var smtp_settings_name = More.GetValue("smtp_settings_name").ThrowIfBlank("smtp_settings_name");
 
-        var smtp_settings = await DbHelper.ExecAsync<SmtpSettings>("WJbSettings_Get", smtp_settings_name, cancellationToken: cancellationToken);
+        var smtp_settings = await WJbDbHelper.WJbSettings_GetAsync<SmtpSettings>(smtp_settings_name, cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(smtp_settings);
 
         var from = More.GetValue("from");
@@ -151,9 +149,4 @@ public class SendEmailAction : BaseAction
     /// <param name="body">The string to check.</param>
     /// <returns>A boolean value indicating whether the specified string is an HTML body.</returns>
     public static bool IsHtmlBody(string? body) => body != null && Regex.IsMatch(body, @"<\s*([^ >]+)[^>]*>.*?<\s*/\s*\1\s*>");  // or @"<[^>]+>"
-
-//    public static bool IsHtmlBody(string? body)
-//    {
-//        return !string.IsNullOrEmpty(body) && Regex.IsMatch(body, @"<\s*([a-z]+)(?:\s+[^>]*)?>.*?<\s*/\s*\1\s*>", RegexOptions.IgnoreCase);
-//    }
 }

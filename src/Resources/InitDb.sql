@@ -103,6 +103,19 @@ IF NOT EXISTS (SELECT 1 FROM [WJbActions] WHERE (ActionId = 10))
 	"result_name": null
 }', 0)
 
+IF NOT EXISTS (SELECT 1 FROM [WJbActions] WHERE (ActionId = 15))
+	INSERT [dbo].[WJbActions] ([ActionId], [ActionName], [ActionType], [ActionMore], [Disabled]) 
+	VALUES (15, N'SendHttpRequest', N'SendHttpRequestAction, UkrGuru.WebJobs', N'{
+	"http_settings_name": "HttpSettings", 
+	"method": "GET", 
+	"url": null,
+	"headers": null, 
+	"content": null,
+	"content_type": "application/json", 
+	"timeout": null, 
+	"result_name": null
+}', 0)
+
 SET IDENTITY_INSERT [WJbActions] OFF
 
 END
@@ -177,9 +190,13 @@ IF NOT EXISTS (SELECT 1 FROM [WJbRules] WHERE (RuleId = 7))
 	INSERT [WJbRules] ([RuleId], [RuleName], [RulePriority], [ActionId], [RuleMore], [Disabled]) 
 	VALUES (7, N'ParseText Base', 2, 7, NULL, 0)
 
-IF NOT EXISTS (SELECT * FROM [dbo].[WJbRules] WHERE [RuleId] = 10)
-	INSERT [dbo].[WJbRules] ([RuleId], [RuleName], [RulePriority], [ActionId], [RuleMore], [Disabled]) 
+IF NOT EXISTS (SELECT * FROM [WJbRules] WHERE [RuleId] = 10)
+	INSERT [WJbRules] ([RuleId], [RuleName], [RulePriority], [ActionId], [RuleMore], [Disabled]) 
 	VALUES (10, N'SSRS.ExportReport Base', 2, 10, NULL, 0)
+
+IF NOT EXISTS (SELECT 1 FROM [WJbRules] WHERE (RuleId = 15))
+	INSERT [WJbRules] ([RuleId], [RuleName], [RulePriority], [ActionId], [RuleMore], [Disabled]) 
+	VALUES (15, N'SendHttpRequest Base', 2, 15, NULL, 0)
 
 IF NOT EXISTS (SELECT 1 FROM [WJbRules] WHERE (RuleId = 999))
 	INSERT [WJbRules] ([RuleId], [RuleName], [RulePriority], [ActionId], [RuleMore], [Disabled]) 
@@ -304,6 +321,12 @@ IF NOT EXISTS (SELECT * FROM [dbo].[WJbSettings] WHERE [Name] = 'ApiSettings')
 INSERT [dbo].[WJbSettings] ([Name], [Value]) VALUES (N'ApiSettings', N'{
   "url": "https://youwebsite/",
   "key": "test"
+}')
+
+IF NOT EXISTS (SELECT * FROM [dbo].[WJbSettings] WHERE [Name] = 'HttpSettings')
+INSERT [dbo].[WJbSettings] ([Name], [Value]) VALUES (N'HttpSettings', N'{
+  "url": "https://youwebsite/",
+  "headers": null
 }')
 
 IF NOT EXISTS (SELECT * FROM [dbo].[WJbSettings] WHERE [Name] = 'StmpSettings')
@@ -493,7 +516,7 @@ END
 BEGIN /*** WJbItems Procs ***/
 EXEC dbo.sp_executesql @statement = N'
 CREATE OR ALTER PROCEDURE [WJbItems_Del_File]
-	@Data uniqueidentifier
+	@Data uniqueidentifier = NULL
 AS
 DELETE FROM WJbItems
 WHERE FileId = @Data
@@ -553,7 +576,7 @@ EXEC dbo.sp_executesql @statement = N'
 CREATE OR ALTER PROCEDURE [WJbQueue_Finish] 
     @Data varchar(100)
 AS
-WITH cte 
+;WITH cte 
 AS (
     SELECT TOP 1 JobId, JobPriority, Created, RuleId, Started, GETDATE() AS Finished, JobMore, JSON_VALUE(@Data, ''$.JobStatus'') JobStatus 
     FROM WJbQueue
@@ -592,14 +615,14 @@ AS
 INSERT INTO WJbQueue (RuleId, JobPriority, JobStatus)
 SELECT RuleId, RulePriority, 1 /* Queued */ 
 FROM WJbRules
-WHERE Disabled = 0 
+WHERE Disabled = 0 AND ISJSON(RuleMore) = 1
 AND NOT JSON_VALUE(RuleMore, ''$.cron'') IS NULL
 AND NOT EXISTS (SELECT 1 FROM WJbQueue WHERE RuleId = WJbRules.RuleId)
 AND dbo.CronValidate(JSON_VALUE(RuleMore, ''$.cron''), GETDATE()) = 1
 ';
 EXEC dbo.sp_executesql @statement = N'
 CREATE OR ALTER PROCEDURE [WJbQueue_Get]
-	@Data int
+	@Data int = NULL
 AS
 SELECT TOP (1) Q.*, R.RuleMore, A.ActionName, A.ActionType, A.ActionMore
 FROM WJbQueue Q
@@ -631,7 +654,7 @@ END
 BEGIN /*** WJbSettings Procs ***/
 EXEC dbo.sp_executesql @statement = N'
 CREATE OR ALTER PROCEDURE [WJbSettings_Get]
-	@Data nvarchar(100)
+	@Data nvarchar(100) = NULL
 AS
 SELECT TOP (1) [Value]
 FROM WJbSettings

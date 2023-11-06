@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace WebJobsTests;
+﻿namespace WebJobsTests;
 
 public class SchedulerTests
 {

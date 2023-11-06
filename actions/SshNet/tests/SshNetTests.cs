@@ -50,7 +50,7 @@ public class SshNetTests
     {
         var dbFile = new DbFile() { FileName = "1.txt", FileContent = Encoding.UTF8.GetBytes(new String('1', 4096)) };
 
-        var guidFile = await dbFile.SetAsync();
+        var guidFile = await dbFile.SetAsync<string>();
 
         Assert.NotNull(guidFile);
 

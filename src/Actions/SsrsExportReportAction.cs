@@ -4,10 +4,8 @@
 using System.Net;
 using System.Text.Json.Serialization;
 using System.Web;
-using UkrGuru.Extensions;
-using UkrGuru.Extensions.Data;
-using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
+using UkrGuru.SqlJson.Extensions;
 
 namespace UkrGuru.WebJobs.Actions;
 
@@ -49,7 +47,7 @@ public class SsrsExportReportAction : BaseAction
     {
         var ssrs_settings_name = More.GetValue("ssrs_settings_name").ThrowIfBlank("ssrs_settings_name");
 
-        var ssrs_settings = await DbHelper.ExecAsync<SsrsSettings>("WJbSettings_Get", ssrs_settings_name, cancellationToken: cancellationToken);
+        var ssrs_settings = await WJbDbHelper.WJbSettings_GetAsync<SsrsSettings>(ssrs_settings_name, cancellationToken);
         ArgumentNullException.ThrowIfNull(ssrs_settings?.BaseUrl);
 
         var report = More.GetValue("report").ThrowIfBlank("report");
@@ -96,7 +94,7 @@ public class SsrsExportReportAction : BaseAction
             FileContent = await response.Content.ReadAsByteArrayAsync(cancellationToken)
         };
 
-        var guid = await file.SetAsync<Guid?>(cancellationToken: cancellationToken);
+        var guid = await DbFileHelper.SetAsync(file, cancellationToken: cancellationToken);
 
         if (!string.IsNullOrEmpty(result_name))
         {

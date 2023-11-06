@@ -2,8 +2,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using System.Text.Json;
-using UkrGuru.Extensions;
-using UkrGuru.Extensions.Logging;
+using UkrGuru.SqlJson.Extensions;
 using UkrGuru.WebJobs.Data;
 using static UkrGuru.WebJobs.Data.ParsingGoalExtensions;
 
@@ -27,7 +26,8 @@ public class ParseTextAction : BaseAction
         var goals = JsonSerializer.Deserialize<ParsingGoal[]>(More.GetValue("goals") ?? "[]");
         ArgumentNullException.ThrowIfNull(goals);
 
-        var result_name = More.GetValue("result_name") ?? "result";
+        var result_name = More.GetValue("result_name");
+
         goals = goals.AppendRootNode(text);
 
         for (int i = 0; i < goals.Length; i++)
@@ -35,9 +35,21 @@ public class ParseTextAction : BaseAction
             goals[i].Value = goals.ParseValue(goals[i]);
         }
 
-        More[result_name] = goals.GetResult();
+        var result = goals.GetResult();
 
-        await DbLogHelper.LogInformationAsync(nameof(SendEmailAction), new { jobId = JobId, result = ShortStr(More.GetValue(result_name), 200) }, cancellationToken);
+        if (result_name?.Length > 0)
+        {
+
+            More[result_name] = result;
+
+            await DbLogHelper.LogInformationAsync(nameof(SendEmailAction), new { jobId = JobId, result = ShortStr(result, 200) }, cancellationToken);
+
+            return GetDecision(result);
+        }
+        else
+        {
+            await DbLogHelper.LogInformationAsync(nameof(SendEmailAction), new { jobId = JobId, result = "OK" }, cancellationToken);
+        }
 
         return true;
     }

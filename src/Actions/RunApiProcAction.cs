@@ -3,9 +3,8 @@
 
 using System.Text;
 using System.Text.Json.Serialization;
-using UkrGuru.Extensions;
-using UkrGuru.Extensions.Logging;
 using UkrGuru.SqlJson;
+using UkrGuru.SqlJson.Extensions;
 
 namespace UkrGuru.WebJobs.Actions;
 
@@ -42,7 +41,7 @@ public class RunApiProcAction : BaseAction
     {
         var api_settings_name = More.GetValue("api_settings_name").ThrowIfBlank("api_settings_name");
 
-        var api_settings = await DbHelper.ExecAsync<ApiSettings>("WJbSettings_Get", api_settings_name, cancellationToken: cancellationToken);
+        var api_settings = await WJbDbHelper.WJbSettings_GetAsync<ApiSettings?>(api_settings_name, cancellationToken);
         ArgumentNullException.ThrowIfNull(api_settings);
 
         var url = api_settings.Url;
@@ -94,12 +93,17 @@ public class RunApiProcAction : BaseAction
 
         var responseBody = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
 
+        await DbLogHelper.LogInformationAsync(nameof(RunApiProcAction), new { jobId = JobId, result = ShortStr(responseBody, 200) }, cancellationToken);
+
         if (responseBody != null && responseBody.StartsWith("Error:"))
             throw new Exception(responseBody.Replace("Error:", "").TrimStart());
 
-        await DbLogHelper.LogInformationAsync(nameof(RunApiProcAction), new { jobId = JobId, result = ShortStr(responseBody, 200) }, cancellationToken);
+        if (result_name?.Length > 0)
+        {
+            More[result_name] = responseBody;
 
-        if (!string.IsNullOrEmpty(result_name)) More[result_name] = responseBody;
+            return GetDecision(responseBody);
+        }
 
         return true;
     }
